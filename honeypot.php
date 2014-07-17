@@ -5,7 +5,7 @@ Plugin URI: http://www.daobydesign.com/free-plugins/honeypot-module-for-contact-
 Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
 Author: Dao By Design
 Author URI: http://www.daobydesign.com
-Version: 1.6
+Version: 1.6.1
 */
 
 /*  Copyright 2014  Dao By Design  (email : info@daobydesign.com)
@@ -111,7 +111,7 @@ function wpcf7_add_tag_generator_honeypot() {
 	}
 }
 
-function wpcf7_tg_pane_honeypot( &$contact_form ) { ?>
+function wpcf7_tg_pane_honeypot( $contact_form ) { ?>
 	<div id="wpcf7-tg-pane-honeypot" class="hidden">
 		<form action="">
 			<table>

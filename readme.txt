@@ -93,6 +93,9 @@ Small update for W3C compliance. Thanks <a href="http://wordpress.org/support/to
 * Initial release.
 
 == Upgrade Notice ==
+= 1.6.3 =
+Must update if running CF7 4.2 or above. If using less than CF7 4.2, use the v1.6.2 of this plugin.
+
 = 1.6.2 =
 Must update if running CF7 4.1 or above. Update also compatible with CF7 3.6 and above. If using less than CF7 3.6, use the v1.3 of this plugin.
 

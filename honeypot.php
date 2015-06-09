@@ -5,7 +5,7 @@ Plugin URI: http://www.daobydesign.com/free-plugins/honeypot-module-for-contact-
 Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
 Author: Dao By Design
 Author URI: http://www.daobydesign.com
-Version: 1.6.2
+Version: 1.6.3
 */
 
 /*  Copyright 2014  Dao By Design  (email : info@daobydesign.com)
@@ -106,40 +106,61 @@ function wpcf7_honeypot_filter ( $result, $tag ) {
 add_action( 'admin_init', 'wpcf7_add_tag_generator_honeypot', 35 );
 
 function wpcf7_add_tag_generator_honeypot() {
-	if (function_exists('wpcf7_add_tag_generator')) {
-		wpcf7_add_tag_generator( 'honeypot', __( 'Honeypot', 'wpcf7' ),	'wpcf7-tg-pane-honeypot', 'wpcf7_tg_pane_honeypot' );
-	}
+	$tag_generator = WPCF7_TagGenerator::get_instance();
+	$tag_generator->add( 'honeypot', __( 'Honeypot', 'contact-form-7' ), 'wpcf7_tg_pane_honeypot' );
 }
 
-function wpcf7_tg_pane_honeypot( $contact_form ) { ?>
-	<div id="wpcf7-tg-pane-honeypot" class="hidden">
-		<form action="">
-			<table>
+function wpcf7_tg_pane_honeypot($contact_form, $contact_form, $args = '') {
+	$args = wp_parse_args( $args, array() );
+	$description = __( "Generate a form-tag for a spam-stopping honeypot field. For more details, see %s.", 'wpcf7_honeypot' );
+	$desc_link = wpcf7_link( __( 'https://wordpress.org/plugins/contact-form-7-honeypot/', 'wpcf7_honeypot' ), __( 'CF7 Honeypot', 'wpcf7_honeypot' ) );
+	?>
+	<div class="control-box">
+		<fieldset>
+			<legend><?php echo sprintf( esc_html( $description ), $desc_link ); ?></legend>
+
+			<table class="form-table"><tbody>
 				<tr>
+					<th scope="row">
+						<label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?></label>
+					</th>
 					<td>
-						<?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?><br />
-						<input type="text" name="name" class="tg-name oneline" /><br />
-						<em><small><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'wpcf7_honeypot' ) ); ?></small></em>
+						<input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /><br>
+						<em><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'wpcf7_honeypot' ) ); ?></em>
 					</td>
-					<td></td>
 				</tr>
-					
+
 				<tr>
+					<th scope="row">
+						<label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php echo esc_html( __( 'Id attribute', 'contact-form-7' ) ); ?></label>
+					</th>
 					<td>
-						<code>id</code> (<?php echo esc_html( __( 'optional', 'contact-form-7' ) ); ?>)<br />
-						<input type="text" name="id" class="idvalue oneline option" />
+						<input type="text" name="id" class="idvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-id' ); ?>" />
 					</td>
+				</tr>
+
+				<tr>
+					<th scope="row">
+						<label for="<?php echo esc_attr( $args['content'] . '-class' ); ?>"><?php echo esc_html( __( 'Class attribute', 'contact-form-7' ) ); ?></label>
+					</th>
 					<td>
-						<code>class</code> (<?php echo esc_html( __( 'optional', 'contact-form-7' ) ); ?>)<br />
-						<input type="text" name="class" class="classvalue oneline option" />
+						<input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-class' ); ?>" />
 					</td>
-				</tr>				
-			</table>
-			
-			<div class="tg-tag"><?php echo esc_html( __( "Copy this code and paste it into the form left.", 'wpcf7_honeypot' ) ); ?><br /><input type="text" name="honeypot" class="tag" readonly="readonly" onfocus="this.select()" /></div>
-		</form>
+				</tr>
+
+			</tbody></table>
+		</fieldset>
 	</div>
 
-<?php }
+	<div class="insert-box">
+		<input type="text" name="honeypot" class="tag code" readonly="readonly" onfocus="this.select()" />
 
-?>
+		<div class="submitbox">
+			<input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr( __( 'Insert Tag', 'contact-form-7' ) ); ?>" />
+		</div>
+
+		<br class="clear" />
+	</div>
+
+<?php
+}

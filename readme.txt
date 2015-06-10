@@ -2,7 +2,7 @@
 Tags: honeypot, antispam, captcha, spam, form, forms, contact form 7, contactform7, contact form, cf7, cforms, Contact Forms 7, Contact Forms, contacts
 Requires at least: 3.5
 Tested up to: 4.2
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 Contributors: DaoByDesign
 Donate link: http://www.daobydesign.com/buy-us-a-coffee/
 License: GPLv2 or later
@@ -14,7 +14,7 @@ Contact Form 7 Honeypot - Adds honeypot anti-spam functionality to CF7 forms.
 
 This simple addition to the wonderful <a href="http://wordpress.org/extend/plugins/contact-form-7/">Contact Form 7</a> (CF7) plugin adds basic honeypot anti-spam functionality to thwart spambots without the need for an ugly captcha.
 
-The principle of a honeypot is simple -- <em>bots are stupid</em>. While some spam is hand-delivered, the vast majority is submitted by bots scripted in a specific (wide-scope) way to submit spam to the largest number of form types. In this way they somewhat blindly fill in fields, irregardless of whether the field should be filled in or not. This is how a honeypot catches the bot -- it introduces an additional field in the form that if filled out will cause the form not to validate.
+The principle of a honeypot is simple -- <em>bots are stupid</em>. While some spam is hand-delivered, the vast majority is submitted by bots scripted in a specific (wide-scope) way to submit spam to the largest number of form types. In this way they somewhat blindly fill in fields, regardless of whether the field should be filled in or not. This is how a honeypot catches the bot -- it introduces an additional field in the form that if filled out will cause the form not to validate.
 
 Follow us on [Twitter](http://www.twitter.com/daobydesign) and on [Facebook](http://www.facebook.com/daobydesign) for updates and news.
 
@@ -62,6 +62,9 @@ add_filter('wpcf7_honeypot_html_output', 'my_honeypot_override', 10, 2 ); ?>`
 * Yep! New in version 1.5 of the plugin you're able to adjust the HTML by hooking the output filter for the plugin. See the **Installation** section for more details.
 
 == Changelog ==
+= 1.6.4 =
+Quick fix release to fix PHP error introduced in 1.6.3.
+
 = 1.6.3 =
 Updates to accommodate changes to the CF7 editor user interface.
 

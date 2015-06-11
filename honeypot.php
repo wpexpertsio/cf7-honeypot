@@ -5,7 +5,7 @@ Plugin URI: http://www.daobydesign.com/free-plugins/honeypot-module-for-contact-
 Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
 Author: Dao By Design
 Author URI: http://www.daobydesign.com
-Version: 1.6.4
+Version: 1.7
 */
 
 /*  Copyright 2015  Dao By Design  (email : info@daobydesign.com)
@@ -64,17 +64,21 @@ function wpcf7_honeypot_shortcode_handler( $tag ) {
 	$validation_error = wpcf7_get_validation_error( $tag->name );
 
 	$class = wpcf7_form_controls_class( 'text' );
-
+	
 	$atts = array();
 	$atts['class'] = $tag->get_class_option( $class );
 	$atts['id'] = $tag->get_option( 'id', 'id', true );
 	$atts['message'] = __('Please leave this field empty.','wpcf7_honeypot');
 	$atts['name'] = $tag->name;
 	$atts['type'] = $tag->type;
+	$atts['nomessage'] = $tag->get_option('nomessage');
 	$atts['validation_error'] = $validation_error;
 	$inputid = (!empty($atts['id'])) ? 'id="'.$atts['id'].'" ' : '';
 	$html = '<span class="wpcf7-form-control-wrap ' . $atts['name'] . '-wrap" style="display:none !important;visibility:hidden !important;">';
-	$html .= '<input ' . $inputid . 'class="' . $atts['class'] . '"  type="text" name="' . $atts['name'] . '" value="" size="40" tabindex="-1" /><br><small>'.$atts['message'].'</small>';
+	$html .= '<input ' . $inputid . 'class="' . $atts['class'] . '"  type="text" name="' . $atts['name'] . '" value="" size="40" tabindex="-1" />';
+	if (!$atts['nomessage']) {
+		$html .= '<span class="hp-message">'.$atts['message'].'</span>';
+	}
 	$html .= $validation_error . '</span>';
 
 	// Hook for filtering finished Honeypot form element.
@@ -106,61 +110,117 @@ function wpcf7_honeypot_filter ( $result, $tag ) {
 add_action( 'admin_init', 'wpcf7_add_tag_generator_honeypot', 35 );
 
 function wpcf7_add_tag_generator_honeypot() {
-	$tag_generator = WPCF7_TagGenerator::get_instance();
-	$tag_generator->add( 'honeypot', __( 'Honeypot', 'contact-form-7' ), 'wpcf7_tg_pane_honeypot' );
+	if (class_exists('WPCF7_TagGenerator')) {
+		$tag_generator = WPCF7_TagGenerator::get_instance();
+		$tag_generator->add( 'honeypot', __( 'Honeypot', 'contact-form-7' ), 'wpcf7_tg_pane_honeypot' );
+	} else if (function_exists('wpcf7_add_tag_generator')) {
+		wpcf7_add_tag_generator( 'honeypot', __( 'Honeypot', 'wpcf7' ),	'wpcf7-tg-pane-honeypot', 'wpcf7_tg_pane_honeypot' );
+	}
 }
 
 function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
-	$args = wp_parse_args( $args, array() );
-	$description = __( "Generate a form-tag for a spam-stopping honeypot field. For more details, see %s.", 'wpcf7_honeypot' );
-	$desc_link = wpcf7_link( __( 'https://wordpress.org/plugins/contact-form-7-honeypot/', 'wpcf7_honeypot' ), __( 'CF7 Honeypot', 'wpcf7_honeypot' ) );
-	?>
-	<div class="control-box">
-		<fieldset>
-			<legend><?php echo sprintf( esc_html( $description ), $desc_link ); ?></legend>
+	if (class_exists('WPCF7_TagGenerator')) {
+		$args = wp_parse_args( $args, array() );
+		$description = __( "Generate a form-tag for a spam-stopping honeypot field. For more details, see %s.", 'wpcf7_honeypot' );
+		$desc_link = '<a href="https://wordpress.org/plugins/contact-form-7-honeypot/" target="_blank">'.__( 'CF7 Honeypot', 'wpcf7_honeypot' ).'</a>';
+		?>
+		<div class="control-box">
+			<fieldset>
+				<legend><?php echo sprintf( esc_html( $description ), $desc_link ); ?></legend>
 
-			<table class="form-table"><tbody>
-				<tr>
-					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?></label>
-					</th>
-					<td>
-						<input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /><br>
-						<em><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'wpcf7_honeypot' ) ); ?></em>
-					</td>
-				</tr>
+				<table class="form-table"><tbody>
+					<tr>
+						<th scope="row">
+							<label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?></label>
+						</th>
+						<td>
+							<input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /><br>
+							<em><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'wpcf7_honeypot' ) ); ?></em>
+						</td>
+					</tr>
 
-				<tr>
-					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php echo esc_html( __( 'Id attribute', 'contact-form-7' ) ); ?></label>
-					</th>
-					<td>
-						<input type="text" name="id" class="idvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-id' ); ?>" />
-					</td>
-				</tr>
+					<tr>
+						<th scope="row">
+							<label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php echo esc_html( __( 'ID (optional)', 'contact-form-7' ) ); ?></label>
+						</th>
+						<td>
+							<input type="text" name="id" class="idvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-id' ); ?>" />
+						</td>
+					</tr>
 
-				<tr>
-					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-class' ); ?>"><?php echo esc_html( __( 'Class attribute', 'contact-form-7' ) ); ?></label>
-					</th>
-					<td>
-						<input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-class' ); ?>" />
-					</td>
-				</tr>
+					<tr>
+						<th scope="row">
+							<label for="<?php echo esc_attr( $args['content'] . '-class' ); ?>"><?php echo esc_html( __( 'Class (optional)', 'contact-form-7' ) ); ?></label>
+						</th>
+						<td>
+							<input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-class' ); ?>" />
+						</td>
+					</tr>
 
-			</tbody></table>
-		</fieldset>
-	</div>
+					<tr>
+						<th scope="row">
+							<label for="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>"><?php echo esc_html( __( 'Don\'t Use Useability Message (optional)', 'contact-form-7' ) ); ?></label>
+						</th>
+						<td>
+							<input type="checkbox" name="nomessage:true" id="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>" class="messagekillvalue option" /><br />
+							<em><small><?php echo __('If checked, the useability message will not be generated. <strong>This is not recommended</strong>. If you\'re unsure, leave this unchecked.','wpcf7_honeypot'); ?>"</small></em>
+						</td>
+					</tr>
 
-	<div class="insert-box">
-		<input type="text" name="honeypot" class="tag code" readonly="readonly" onfocus="this.select()" />
-
-		<div class="submitbox">
-			<input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr( __( 'Insert Tag', 'contact-form-7' ) ); ?>" />
+				</tbody></table>
+			</fieldset>
 		</div>
 
-		<br class="clear" />
-	</div>
+		<div class="insert-box">
+			<input type="text" name="honeypot" class="tag code" readonly="readonly" onfocus="this.select()" />
 
-<?php
+			<div class="submitbox">
+				<input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr( __( 'Insert Tag', 'contact-form-7' ) ); ?>" />
+			</div>
+
+			<br class="clear" />
+		</div>
+	<?php } else { ?>
+		<div id="wpcf7-tg-pane-honeypot" class="hidden">
+			<form action="">
+				<table>
+					<tr>
+						<td>
+							<?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?><br />
+							<input type="text" name="name" class="tg-name oneline" /><br />
+							<em><small><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'wpcf7_honeypot' ) ); ?></small></em>
+						</td>
+						<td></td>
+					</tr>
+					
+					<tr>
+						<td colspan="2"><hr></td>
+					</tr>
+
+					<tr>
+						<td>
+							<?php echo esc_html( __( 'ID (optional)', 'contact-form-7' ) ); ?><br />
+							<input type="text" name="id" class="idvalue oneline option" />
+						</td>
+						<td>
+							<?php echo esc_html( __( 'Class (optional)', 'contact-form-7' ) ); ?><br />
+							<input type="text" name="class" class="classvalue oneline option" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input type="checkbox" name="nomessage:true" id="nomessage" class="messagekillvalue option" /> <label for="nomessage"><?php echo esc_html( __( 'Don\'t Use Useability Message (optional)', 'contact-form-7' ) ); ?></label><br />
+							<em><small><?php echo __('If checked, the useability message will not be generated. <strong>This is not recommended</strong>. If you\'re unsure, leave this unchecked.','wpcf7_honeypot'); ?>"</small></em>
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan="2"><hr></td>
+					</tr>			
+				</table>
+				
+				<div class="tg-tag"><?php echo esc_html( __( "Copy this code and paste it into the form left.", 'wpcf7_honeypot' ) ); ?><br /><input type="text" name="honeypot" class="tag" readonly="readonly" onfocus="this.select()" /></div>
+			</form>
+		</div>
+	<?php }
 }

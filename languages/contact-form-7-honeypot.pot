@@ -1,0 +1,94 @@
+# Copyright (C) 2016 Contact Form 7 Honeypot
+# This file is distributed under the same license as the Contact Form 7 Honeypot package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Contact Form 7 Honeypot 1.8\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/contact-form-7-"
+"honeypot\n"
+"POT-Creation-Date: 2016-02-04 18:24:35+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: honeypot.php:55
+msgid "%s must be installed and activated for the CF7 Honeypot plugin to work"
+msgstr ""
+
+#: honeypot.php:95
+msgid "Please leave this field empty."
+msgstr ""
+
+#: honeypot.php:149 honeypot.php:151
+msgid "Honeypot"
+msgstr ""
+
+#: honeypot.php:158
+msgid ""
+"Generate a form-tag for a spam-stopping honeypot field. For more details, "
+"see %s."
+msgstr ""
+
+#: honeypot.php:159
+msgid "CF7 Honeypot"
+msgstr ""
+
+#: honeypot.php:168 honeypot.php:223
+msgid "Name"
+msgstr ""
+
+#: honeypot.php:172 honeypot.php:225
+msgid ""
+"For better security, change \"honeypot\" to something less bot-recognizable."
+msgstr ""
+
+#: honeypot.php:178 honeypot.php:236
+msgid "ID (optional)"
+msgstr ""
+
+#: honeypot.php:187 honeypot.php:240
+msgid "Class (optional)"
+msgstr ""
+
+#: honeypot.php:196 honeypot.php:246
+msgid "Don't Use Accessibility Message (optional)"
+msgstr ""
+
+#: honeypot.php:200 honeypot.php:247
+msgid ""
+"If checked, the accessibility message will not be generated. <strong>This is "
+"not recommended</strong>. If you're unsure, leave this unchecked."
+msgstr ""
+
+#: honeypot.php:212
+msgid "Insert Tag"
+msgstr ""
+
+#: honeypot.php:256
+msgid "Copy this code and paste it into the form left."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Contact Form 7 Honeypot"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid ""
+"http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-wordpress-"
+"plugin/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Add honeypot anti-spam functionality to the popular Contact Form 7 plugin."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Nocean"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.nocean.ca"
+msgstr ""

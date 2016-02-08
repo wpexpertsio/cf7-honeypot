@@ -1,10 +1,10 @@
 === Contact Form 7 Honeypot ===
 Tags: honeypot, antispam, captcha, spam, form, forms, contact form 7, contactform7, contact form, cf7, cforms, Contact Forms 7, Contact Forms, contacts
 Requires at least: 3.5
-Tested up to: 4.2
-Stable tag: 1.7
+Tested up to: 4.5
+Stable tag: 1.8
 Contributors: DaoByDesign
-Donate link: http://www.daobydesign.com/buy-us-a-coffee/
+Donate link: http://www.nocean.ca/buy-us-a-coffee/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,36 +16,38 @@ This simple addition to the wonderful <a href="http://wordpress.org/extend/plugi
 
 The principle of a honeypot is simple -- <em>bots are stupid</em>. While some spam is hand-delivered, the vast majority is submitted by bots scripted in a specific (wide-scope) way to submit spam to the largest number of form types. In this way they somewhat blindly fill in fields, regardless of whether the field should be filled in or not. This is how a honeypot catches the bot -- it introduces an additional field in the form that if filled out will cause the form not to validate.
 
-Follow us on [Twitter](http://www.twitter.com/daobydesign) and on [Facebook](http://www.facebook.com/daobydesign) for updates and news.
-
-= IMPORTANT NOTE: =
-If you are using CF7 3.6+, use the latest version of this plugin. If you are using an older version of CF7, you will need to use [CF7 Honeypot v1.3](http://downloads.wordpress.org/plugin/contact-form-7-honeypot.1.3.zip).
+Follow us on [Twitter](https://twitter.com/NoceanCA) and on [Facebook](https://www.facebook.com/nocean.ca/) for updates and news.
 
 <strong>Support can be found [here](http://wordpress.org/support/plugin/contact-form-7-honeypot).</strong>
 
-Visit the [Contact Form 7 Honeypot plugin page](http://www.daobydesign.com/free-plugins/honeypot-module-for-contact-form-7-wordpress-plugin) for installation & additional information.
+Visit the [Contact Form 7 Honeypot plugin page](http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-wordpress-plugin/) for additional information or to [buy us a coffee](http://www.nocean.ca/buy-us-a-coffee/) to say thanks.
+
+= Localization/Translation =
+If you'd like to translate this plugin, please [send us your .PO files](mailto:hello@nocean.ca). The plugin's base .POT file is [available here](http://plugins.svn.wordpress.org/contact-form-7-honeypot/trunk/languages/).
+
+= IMPORTANT NOTES: =
+If you are using CF7 3.6+, use the latest version of this plugin. If you are using an older version of CF7, you will need to use [CF7 Honeypot v1.3](http://downloads.wordpress.org/plugin/contact-form-7-honeypot.1.3.zip).
 
 == Installation ==
 
-1. Install using Wordpress' "Add Plugin" feature -- just search for "Contact Form 7 Honeypot"
-1. Activate the plugin
-1. Edit a form in Contact Form 7
-1. Choose "Honeypot" from the Generate Tag dropdown. <em>Recommended: change the honeypot element's ID.</em>
+1. Install using the Wordpress "Add Plugin" feature -- just search for "Contact Form 7 Honeypot".
+1. Confirm that [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) is installed and activated. Then activate this plugin.
+1. Edit a form in Contact Form 7.
+1. Choose "Honeypot" from the CF7 tag generator. <em>Recommended: change the honeypot element's ID.</em>
 1. Insert the generated tag anywhere in your form. The added field uses inline CSS styles to hide the field from your visitors.
 
 = Installation & Usage Video =
 [youtube https://www.youtube.com/watch?v=yD2lBrU0gA0]
-For the more visually-minded, here is a [short video showing how to install and use CF7 Honeypot](https://www.youtube.com/watch?v=yD2lBrU0gA0) from the fine folks at RoseApple Media.
+For the more visually-minded, here is a [short video showing how to install and use CF7 Honeypot](https://www.youtube.com/watch?v=yD2lBrU0gA0) from the fine folks at RoseApple Media. **Note:** This video was not produced by the CF7 Honeypot developer.
 
 = Altering the Honeypot Output HTML [ADVANCED] =
-Should you wish to, you can change the outputted Honeypot HTML by using the **wpcf7_honeypot_html_output** filter.
+While the basic settings should keep most people happy, we've added several filters for you to further customize the honeypot field. The three filters available are:
 
-Ex:
-`<?php function my_honeypot_override( $html, $args ) {
-    // [DO STUFF HERE]
-    return $html;
-}
-add_filter('wpcf7_honeypot_html_output', 'my_honeypot_override', 10, 2 ); ?>`
+* `wpcf7_honeypot_accessibility_message` - Adjusts the default text for the (hidden) accessibility message.
+* `wpcf7_honeypot_container_css` - Adjusts the CSS that is applied to the honeypot container to keep it hidden from view.
+* `wpcf7_honeypot_html_output` - Adjusts the entire HTML output of the honeypot element.
+
+For examples of the above, please see this [recipe Gist](https://gist.github.com/nocean/953b1362b63bd3ecf68c).
 
 == Frequently Asked Questions == 
 
@@ -55,13 +57,16 @@ add_filter('wpcf7_honeypot_html_output', 'my_honeypot_override', 10, 2 ); ?>`
 
 = Are honeypots better than CAPTCHAs? =
 
-* This largely depends on the quality of the CAPTCHA. Unfortunately the more difficult a CAPTCHA is to break, the more user-unfriendly it is. This honeypot module was created because we don't like CAPTCHA's cluttering up our forms. Our recommendation is to try this module first, and if you find that it doesn't stop enough spam, then employ more challenging anti-spam techniques.
+* This largely depends on the quality of the CAPTCHA. Unfortunately the more difficult a CAPTCHA is to break, the more unfriendly it is to the end user. This honeypot module was created because we don't like CAPTCHAs cluttering up our forms. Our recommendation is to try this module first, and if you find that it doesn't stop enough spam, then employ more challenging anti-spam techniques.
 
 = Can I modify the HTML this plugin outputs? =
 
-* Yep! New in version 1.5 of the plugin you're able to adjust the HTML by hooking the output filter for the plugin. See the **Installation** section for more details.
+* Yep! See the **Installation** section for more details and [this Gist](https://gist.github.com/nocean/953b1362b63bd3ecf68c) for examples.
 
 == Changelog ==
+= 1.8 =
+Added wpcf7_honeypot_accessibility_message and wpcf7_honeypot_container_css filters, i18n support.
+
 = 1.7 =
 Provides backwards compatibility for pre-CF7 4.2, introduces ability to remove accessibility message.
 
@@ -93,12 +98,15 @@ Update to improve outputted HTML for better standards compliance when the same f
 Small update to add better i18n and WPML compatibility.
 
 = 1.1 =
-Small update for W3C compliance. Thanks <a href="http://wordpress.org/support/topic/plugin-contact-form-7-honeypot-not-w3c-compliant">Jeff</a>.
+Small update for W3C compliance. Thanks [Jeff](http://wordpress.org/support/topic/plugin-contact-form-7-honeypot-not-w3c-compliant)</a>.
 
 = 1.0.0 =
 * Initial release.
 
 == Upgrade Notice ==
+= 1.8 =
+Recommended update for all users using CF7 3.6 and above.
+
 = 1.7 =
 Recommended update for all users using CF7 3.6 and above.
 

@@ -1,14 +1,16 @@
 <?php
 /*
 Plugin Name: Contact Form 7 Honeypot
-Plugin URI: http://www.daobydesign.com/free-plugins/honeypot-module-for-contact-form-7-wordpress-plugin
+Plugin URI: http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-wordpress-plugin/
 Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
-Author: Dao By Design
-Author URI: http://www.daobydesign.com
-Version: 1.7
+Author: Nocean
+Author URI: http://www.nocean.ca
+Version: 1.8
+Text Domain: contact-form-7-honeypot
+Domain Path: /languages
 */
 
-/*  Copyright 2015  Dao By Design  (email : info@daobydesign.com)
+/*  Copyright 2015  Ryan McLaughlin  (email : hello@nocean.ca)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,35 +28,57 @@ Version: 1.7
 
 */
 
-add_action('wpcf7_init', 'wpcf7_honeypot_loader', 10);
 
-function wpcf7_honeypot_loader() {
-	global $pagenow;
-	if (function_exists('wpcf7_add_shortcode')) {
-		wpcf7_add_shortcode( 'honeypot', 'wpcf7_honeypot_shortcode_handler', true );
-	} else {
-		if ($pagenow != 'plugins.php') { return; }
-		add_action('admin_notices', 'cfhiddenfieldserror');
-		wp_enqueue_script('thickbox');
-		function cfhiddenfieldserror() {
-			$out = '<div class="error" id="messages"><p>';
-			if(file_exists(WP_PLUGIN_DIR.'/contact-form-7/wp-contact-form-7.php')) {
-				$out .= __('The Contact Form 7 is installed, but <strong>you must activate Contact Form 7</strong> below for the Honeypot Module to work.','wpcf7_honeypot');
-			} else {
-				$out .= __('The Contact Form 7 plugin must be installed for the Honeypot Module to work. <a href="'.admin_url('plugin-install.php?tab=plugin-information&plugin=contact-form-7&from=plugins&TB_iframe=true&width=600&height=550').'" class="thickbox" title="Contact Form 7">Install Now.</a>', 'wpcf7_honeypot');
-			}
-			$out .= '</p></div>';	
-			echo $out;
-		}
-	}
+/**
+ * 
+ * Check if CF7 is installed and activated.
+ * 		Deliver a message to install CF7 if not.
+ * 
+ */
+add_action( 'admin_init', 'wpcf7_honeypot_has_parent_plugin' );
+function wpcf7_honeypot_has_parent_plugin() {
+    if ( is_admin() && current_user_can( 'activate_plugins' ) &&  !is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
+        add_action( 'admin_notices', 'wpcf7_honeypot_nocf7_notice' );
+
+        deactivate_plugins( plugin_basename( __FILE__ ) ); 
+
+        if ( isset( $_GET['activate'] ) ) {
+            unset( $_GET['activate'] );
+        }
+    }
+}
+
+function wpcf7_honeypot_nocf7_notice() { ?>
+    <div class="error">
+    	<p>
+    		<?php printf(
+				__('%s must be installed and activated for the CF7 Honeypot plugin to work', 'contact-form-7-honeypot'),
+				'<a href="'.admin_url('plugin-install.php?tab=search&s=contact+form+7').'">Contact Form 7</a>'
+			); ?>
+		</p>
+    </div>
+    <?php
 }
 
 
 /**
-** A base module for [honeypot]
-**/
+ *
+ * Initialize the shortcode
+ * 		This lets CF7 know about Mr. Honeypot.
+ * 
+ */
+add_action('wpcf7_init', 'wpcf7_add_shortcode_honeypot', 10);
+function wpcf7_add_shortcode_honeypot() {
+	wpcf7_add_shortcode( 'honeypot', 'wpcf7_honeypot_shortcode_handler', true );
+}
 
-/* Shortcode handler */
+
+/**
+ * 
+ * Shortcode handler
+ * 		This is where we generate the honeypot HTML from the shortcode options
+ * 
+ */
 function wpcf7_honeypot_shortcode_handler( $tag ) {
 	$tag = new WPCF7_Shortcode( $tag );
 
@@ -68,13 +92,14 @@ function wpcf7_honeypot_shortcode_handler( $tag ) {
 	$atts = array();
 	$atts['class'] = $tag->get_class_option( $class );
 	$atts['id'] = $tag->get_option( 'id', 'id', true );
-	$atts['message'] = __('Please leave this field empty.','wpcf7_honeypot');
+	$atts['message'] = apply_filters('wpcf7_honeypot_accessibility_message', __('Please leave this field empty.','contact-form-7-honeypot'));
 	$atts['name'] = $tag->name;
 	$atts['type'] = $tag->type;
 	$atts['nomessage'] = $tag->get_option('nomessage');
 	$atts['validation_error'] = $validation_error;
+	$atts['css'] = apply_filters('wpcf7_honeypot_container_css', 'display:none !important; visibility:hidden !important;');
 	$inputid = (!empty($atts['id'])) ? 'id="'.$atts['id'].'" ' : '';
-	$html = '<span class="wpcf7-form-control-wrap ' . $atts['name'] . '-wrap" style="display:none !important;visibility:hidden !important;">';
+	$html = '<span class="wpcf7-form-control-wrap ' . $atts['name'] . '-wrap" style="'.$atts['css'].'">';
 	$html .= '<input ' . $inputid . 'class="' . $atts['class'] . '"  type="text" name="' . $atts['name'] . '" value="" size="40" tabindex="-1" />';
 	if (!$atts['nomessage']) {
 		$html .= '<span class="hp-message">'.$atts['message'].'</span>';
@@ -86,7 +111,12 @@ function wpcf7_honeypot_shortcode_handler( $tag ) {
 }
 
 
-/* Honeypot Validation Filter */
+/**
+ * 
+ * Honeypot Validation Filter
+ * 		Bots beware!
+ * 
+ */
 add_filter( 'wpcf7_validate_honeypot', 'wpcf7_honeypot_filter' ,10,2);
 
 function wpcf7_honeypot_filter ( $result, $tag ) {
@@ -105,9 +135,13 @@ function wpcf7_honeypot_filter ( $result, $tag ) {
 }
 
 
-/* Tag generator */
-
-add_action( 'admin_init', 'wpcf7_add_tag_generator_honeypot', 35 );
+/**
+ * 
+ * Tag generator
+ * 		Adds Honeypot to the CF7 form editor
+ * 
+ */
+add_action( 'wpcf7_admin_init', 'wpcf7_add_tag_generator_honeypot', 35 );
 
 function wpcf7_add_tag_generator_honeypot() {
 	if (class_exists('WPCF7_TagGenerator')) {
@@ -121,8 +155,8 @@ function wpcf7_add_tag_generator_honeypot() {
 function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 	if (class_exists('WPCF7_TagGenerator')) {
 		$args = wp_parse_args( $args, array() );
-		$description = __( "Generate a form-tag for a spam-stopping honeypot field. For more details, see %s.", 'wpcf7_honeypot' );
-		$desc_link = '<a href="https://wordpress.org/plugins/contact-form-7-honeypot/" target="_blank">'.__( 'CF7 Honeypot', 'wpcf7_honeypot' ).'</a>';
+		$description = __( "Generate a form-tag for a spam-stopping honeypot field. For more details, see %s.", 'contact-form-7-honeypot' );
+		$desc_link = '<a href="https://wordpress.org/plugins/contact-form-7-honeypot/" target="_blank">'.__( 'CF7 Honeypot', 'contact-form-7-honeypot' ).'</a>';
 		?>
 		<div class="control-box">
 			<fieldset>
@@ -135,7 +169,7 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 						</th>
 						<td>
 							<input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /><br>
-							<em><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'wpcf7_honeypot' ) ); ?></em>
+							<em><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'contact-form-7-honeypot' ) ); ?></em>
 						</td>
 					</tr>
 
@@ -159,11 +193,11 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 
 					<tr>
 						<th scope="row">
-							<label for="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>"><?php echo esc_html( __( 'Don\'t Use Useability Message (optional)', 'contact-form-7' ) ); ?></label>
+							<label for="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>"><?php echo esc_html( __( 'Don\'t Use Accessibility Message (optional)', 'contact-form-7' ) ); ?></label>
 						</th>
 						<td>
 							<input type="checkbox" name="nomessage:true" id="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>" class="messagekillvalue option" /><br />
-							<em><small><?php echo __('If checked, the useability message will not be generated. <strong>This is not recommended</strong>. If you\'re unsure, leave this unchecked.','wpcf7_honeypot'); ?>"</small></em>
+							<em><?php echo __('If checked, the accessibility message will not be generated. <strong>This is not recommended</strong>. If you\'re unsure, leave this unchecked.','contact-form-7-honeypot'); ?></em>
 						</td>
 					</tr>
 
@@ -188,7 +222,7 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 						<td>
 							<?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?><br />
 							<input type="text" name="name" class="tg-name oneline" /><br />
-							<em><small><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'wpcf7_honeypot' ) ); ?></small></em>
+							<em><small><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'contact-form-7-honeypot' ) ); ?></small></em>
 						</td>
 						<td></td>
 					</tr>
@@ -209,8 +243,8 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 					</tr>
 					<tr>
 						<td colspan="2">
-							<input type="checkbox" name="nomessage:true" id="nomessage" class="messagekillvalue option" /> <label for="nomessage"><?php echo esc_html( __( 'Don\'t Use Useability Message (optional)', 'contact-form-7' ) ); ?></label><br />
-							<em><small><?php echo __('If checked, the useability message will not be generated. <strong>This is not recommended</strong>. If you\'re unsure, leave this unchecked.','wpcf7_honeypot'); ?>"</small></em>
+							<input type="checkbox" name="nomessage:true" id="nomessage" class="messagekillvalue option" /> <label for="nomessage"><?php echo esc_html( __( 'Don\'t Use Accessibility Message (optional)', 'contact-form-7' ) ); ?></label><br />
+							<em><?php echo __('If checked, the accessibility message will not be generated. <strong>This is not recommended</strong>. If you\'re unsure, leave this unchecked.','contact-form-7-honeypot'); ?></em>
 						</td>
 					</tr>
 
@@ -219,7 +253,7 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 					</tr>			
 				</table>
 				
-				<div class="tg-tag"><?php echo esc_html( __( "Copy this code and paste it into the form left.", 'wpcf7_honeypot' ) ); ?><br /><input type="text" name="honeypot" class="tag" readonly="readonly" onfocus="this.select()" /></div>
+				<div class="tg-tag"><?php echo esc_html( __( "Copy this code and paste it into the form left.", 'contact-form-7-honeypot' ) ); ?><br /><input type="text" name="honeypot" class="tag" readonly="readonly" onfocus="this.select()" /></div>
 			</form>
 		</div>
 	<?php }

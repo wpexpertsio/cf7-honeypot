@@ -12,19 +12,19 @@ Domain Path: /languages
 
 /*  Copyright 2015  Ryan McLaughlin  (email : hello@nocean.ca)
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
@@ -37,27 +37,27 @@ Domain Path: /languages
  */
 add_action( 'admin_init', 'wpcf7_honeypot_has_parent_plugin' );
 function wpcf7_honeypot_has_parent_plugin() {
-    if ( is_admin() && current_user_can( 'activate_plugins' ) &&  !is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
-        add_action( 'admin_notices', 'wpcf7_honeypot_nocf7_notice' );
+	if ( is_admin() && current_user_can( 'activate_plugins' ) &&  !is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
+		add_action( 'admin_notices', 'wpcf7_honeypot_nocf7_notice' );
 
-        deactivate_plugins( plugin_basename( __FILE__ ) ); 
+		deactivate_plugins( plugin_basename( __FILE__ ) ); 
 
-        if ( isset( $_GET['activate'] ) ) {
-            unset( $_GET['activate'] );
-        }
-    }
+		if ( isset( $_GET['activate'] ) ) {
+			unset( $_GET['activate'] );
+		}
+	}
 }
 
 function wpcf7_honeypot_nocf7_notice() { ?>
-    <div class="error">
-    	<p>
-    		<?php printf(
+	<div class="error">
+		<p>
+			<?php printf(
 				__('%s must be installed and activated for the CF7 Honeypot plugin to work', 'contact-form-7-honeypot'),
 				'<a href="'.admin_url('plugin-install.php?tab=search&s=contact+form+7').'">Contact Form 7</a>'
 			); ?>
 		</p>
-    </div>
-    <?php
+	</div>
+	<?php
 }
 
 

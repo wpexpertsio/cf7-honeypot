@@ -30,6 +30,15 @@ Domain Path: /languages
 
 
 /**
+ * Load textdomain
+ */
+add_action( 'plugins_loaded', 'wpcf7_honeypot_load_textdomain' );
+function wpcf7_honeypot_load_textdomain() {
+	load_plugin_textdomain( 'contact-form-7-honeypot', false, plugin_basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+
+
+/**
  * 
  * Check if CF7 is installed and activated.
  * 		Deliver a message to install CF7 if not.

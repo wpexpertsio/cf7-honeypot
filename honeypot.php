@@ -5,7 +5,7 @@ Plugin URI: http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-word
 Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
 Author: Nocean
 Author URI: http://www.nocean.ca
-Version: 1.8
+Version: 1.9
 Text Domain: contact-form-7-honeypot
 Domain Path: /languages
 */
@@ -27,6 +27,14 @@ Domain Path: /languages
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
+
+/**
+* Load textdomain
+*/
+add_action( 'plugins_loaded', 'wpcf7_honeypot_load_textdomain' );
+function wpcf7_honeypot_load_textdomain() {
+	load_plugin_textdomain( 'contact-form-7-honeypot', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+}
 
 
 /**
@@ -146,9 +154,9 @@ add_action( 'wpcf7_admin_init', 'wpcf7_add_tag_generator_honeypot', 35 );
 function wpcf7_add_tag_generator_honeypot() {
 	if (class_exists('WPCF7_TagGenerator')) {
 		$tag_generator = WPCF7_TagGenerator::get_instance();
-		$tag_generator->add( 'honeypot', __( 'Honeypot', 'contact-form-7' ), 'wpcf7_tg_pane_honeypot' );
+		$tag_generator->add( 'honeypot', __( 'Honeypot', 'contact-form-7-honeypot' ), 'wpcf7_tg_pane_honeypot' );
 	} else if (function_exists('wpcf7_add_tag_generator')) {
-		wpcf7_add_tag_generator( 'honeypot', __( 'Honeypot', 'wpcf7' ),	'wpcf7-tg-pane-honeypot', 'wpcf7_tg_pane_honeypot' );
+		wpcf7_add_tag_generator( 'honeypot', __( 'Honeypot', 'contact-form-7-honeypot' ),	'wpcf7-tg-pane-honeypot', 'wpcf7_tg_pane_honeypot' );
 	}
 }
 
@@ -165,7 +173,7 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 				<table class="form-table"><tbody>
 					<tr>
 						<th scope="row">
-							<label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?></label>
+							<label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php echo esc_html( __( 'Name', 'contact-form-7-honeypot' ) ); ?></label>
 						</th>
 						<td>
 							<input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /><br>
@@ -175,7 +183,7 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 
 					<tr>
 						<th scope="row">
-							<label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php echo esc_html( __( 'ID (optional)', 'contact-form-7' ) ); ?></label>
+							<label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php echo esc_html( __( 'ID (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 						</th>
 						<td>
 							<input type="text" name="id" class="idvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-id' ); ?>" />
@@ -184,7 +192,7 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 
 					<tr>
 						<th scope="row">
-							<label for="<?php echo esc_attr( $args['content'] . '-class' ); ?>"><?php echo esc_html( __( 'Class (optional)', 'contact-form-7' ) ); ?></label>
+							<label for="<?php echo esc_attr( $args['content'] . '-class' ); ?>"><?php echo esc_html( __( 'Class (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 						</th>
 						<td>
 							<input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-class' ); ?>" />
@@ -193,7 +201,7 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 
 					<tr>
 						<th scope="row">
-							<label for="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>"><?php echo esc_html( __( 'Don\'t Use Accessibility Message (optional)', 'contact-form-7' ) ); ?></label>
+							<label for="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>"><?php echo esc_html( __( 'Don\'t Use Accessibility Message (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 						</th>
 						<td>
 							<input type="checkbox" name="nomessage:true" id="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>" class="messagekillvalue option" /><br />
@@ -209,7 +217,7 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 			<input type="text" name="honeypot" class="tag code" readonly="readonly" onfocus="this.select()" />
 
 			<div class="submitbox">
-				<input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr( __( 'Insert Tag', 'contact-form-7' ) ); ?>" />
+				<input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr( __( 'Insert Tag', 'contact-form-7-honeypot' ) ); ?>" />
 			</div>
 
 			<br class="clear" />
@@ -220,7 +228,7 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 				<table>
 					<tr>
 						<td>
-							<?php echo esc_html( __( 'Name', 'contact-form-7' ) ); ?><br />
+							<?php echo esc_html( __( 'Name', 'contact-form-7-honeypot' ) ); ?><br />
 							<input type="text" name="name" class="tg-name oneline" /><br />
 							<em><small><?php echo esc_html( __( 'For better security, change "honeypot" to something less bot-recognizable.', 'contact-form-7-honeypot' ) ); ?></small></em>
 						</td>
@@ -233,17 +241,17 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 
 					<tr>
 						<td>
-							<?php echo esc_html( __( 'ID (optional)', 'contact-form-7' ) ); ?><br />
+							<?php echo esc_html( __( 'ID (optional)', 'contact-form-7-honeypot' ) ); ?><br />
 							<input type="text" name="id" class="idvalue oneline option" />
 						</td>
 						<td>
-							<?php echo esc_html( __( 'Class (optional)', 'contact-form-7' ) ); ?><br />
+							<?php echo esc_html( __( 'Class (optional)', 'contact-form-7-honeypot' ) ); ?><br />
 							<input type="text" name="class" class="classvalue oneline option" />
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">
-							<input type="checkbox" name="nomessage:true" id="nomessage" class="messagekillvalue option" /> <label for="nomessage"><?php echo esc_html( __( 'Don\'t Use Accessibility Message (optional)', 'contact-form-7' ) ); ?></label><br />
+							<input type="checkbox" name="nomessage:true" id="nomessage" class="messagekillvalue option" /> <label for="nomessage"><?php echo esc_html( __( 'Don\'t Use Accessibility Message (optional)', 'contact-form-7-honeypot' ) ); ?></label><br />
 							<em><?php echo __('If checked, the accessibility message will not be generated. <strong>This is not recommended</strong>. If you\'re unsure, leave this unchecked.','contact-form-7-honeypot'); ?></em>
 						</td>
 					</tr>

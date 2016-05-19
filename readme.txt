@@ -2,7 +2,7 @@
 Tags: honeypot, antispam, captcha, spam, form, forms, contact form 7, contactform7, contact form, cf7, cforms, Contact Forms 7, Contact Forms, contacts
 Requires at least: 3.5
 Tested up to: 4.5
-Stable tag: 1.8
+Stable tag: 1.9
 Contributors: DaoByDesign
 Donate link: http://www.nocean.ca/buy-us-a-coffee/
 License: GPLv2 or later
@@ -64,6 +64,9 @@ For examples of the above, please see this [recipe Gist](https://gist.github.com
 * Yep! See the **Installation** section for more details and [this Gist](https://gist.github.com/nocean/953b1362b63bd3ecf68c) for examples.
 
 == Changelog ==
+= 1.9 =
+Added i18n support, French language pack. Thx chris-kns
+
 = 1.8 =
 Added wpcf7_honeypot_accessibility_message and wpcf7_honeypot_container_css filters, i18n support.
 

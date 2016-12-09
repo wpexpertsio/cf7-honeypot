@@ -5,9 +5,9 @@ Plugin URI: http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-word
 Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
 Author: Nocean
 Author URI: http://www.nocean.ca
-Version: 1.9
+Version: 1.10
 Text Domain: contact-form-7-honeypot
-Domain Path: /languages
+Domain Path: /languages/
 */
 
 /*  Copyright 2015  Ryan McLaughlin  (email : hello@nocean.ca)
@@ -30,6 +30,10 @@ Domain Path: /languages
 
 /**
 * Load textdomain
+*
+* Technically depreciated, all translations are handled via 
+* https://translate.wordpress.org/projects/wp-plugins/contact-form-7-honeypot
+* Leaving in the code for now.
 */
 add_action( 'plugins_loaded', 'wpcf7_honeypot_load_textdomain' );
 function wpcf7_honeypot_load_textdomain() {
@@ -75,20 +79,28 @@ function wpcf7_honeypot_nocf7_notice() { ?>
  * 		This lets CF7 know about Mr. Honeypot.
  * 
  */
-add_action('wpcf7_init', 'wpcf7_add_shortcode_honeypot', 10);
-function wpcf7_add_shortcode_honeypot() {
-	wpcf7_add_shortcode( 'honeypot', 'wpcf7_honeypot_shortcode_handler', true );
+add_action('wpcf7_init', 'wpcf7_add_form_tag_honeypot', 10);
+function wpcf7_add_form_tag_honeypot() {
+
+	// Test if new 4.6+ functions exists
+	if (function_exists('wpcf7_add_form_tag')) {
+		wpcf7_add_form_tag( 'honeypot', 'wpcf7_honeypot_formtag_handler', true );
+	} else {
+		wpcf7_add_shortcode( 'honeypot', 'wpcf7_honeypot_formtag_handler', true );
+	}
 }
 
 
 /**
  * 
- * Shortcode handler
+ * Form Tag handler
  * 		This is where we generate the honeypot HTML from the shortcode options
  * 
  */
-function wpcf7_honeypot_shortcode_handler( $tag ) {
-	$tag = new WPCF7_Shortcode( $tag );
+function wpcf7_honeypot_formtag_handler( $tag ) {
+
+	// Test if new 4.6+ functions exists
+	$tag = (class_exists('WPCF7_FormTag')) ? new WPCF7_FormTag( $tag ) : new WPCF7_Shortcode( $tag );
 
 	if ( empty( $tag->name ) )
 		return '';
@@ -128,7 +140,9 @@ function wpcf7_honeypot_shortcode_handler( $tag ) {
 add_filter( 'wpcf7_validate_honeypot', 'wpcf7_honeypot_filter' ,10,2);
 
 function wpcf7_honeypot_filter ( $result, $tag ) {
-	$tag = new WPCF7_Shortcode( $tag );
+	
+	// Test if new 4.6+ functions exists
+	$tag = (class_exists('WPCF7_FormTag')) ? new WPCF7_FormTag( $tag ) : new WPCF7_Shortcode( $tag );
 
 	$name = $tag->name;
 

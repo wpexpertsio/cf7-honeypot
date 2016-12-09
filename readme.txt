@@ -1,8 +1,8 @@
 === Contact Form 7 Honeypot ===
 Tags: honeypot, antispam, captcha, spam, form, forms, contact form 7, contactform7, contact form, cf7, cforms, Contact Forms 7, Contact Forms, contacts
 Requires at least: 3.5
-Tested up to: 4.5
-Stable tag: 1.9
+Tested up to: 4.7
+Stable tag: 1.10
 Contributors: DaoByDesign
 Donate link: http://www.nocean.ca/buy-us-a-coffee/
 License: GPLv2 or later
@@ -23,7 +23,7 @@ Follow us on [Twitter](https://twitter.com/NoceanCA) and on [Facebook](https://w
 Visit the [Contact Form 7 Honeypot plugin page](http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-wordpress-plugin/) for additional information or to [buy us a coffee](http://www.nocean.ca/buy-us-a-coffee/) to say thanks.
 
 = Localization/Translation =
-If you'd like to translate this plugin, please [send us your .PO files](mailto:hello@nocean.ca). The plugin's base .POT file is [available here](http://plugins.svn.wordpress.org/contact-form-7-honeypot/trunk/languages/).
+If you'd like to translate this plugin, please visit the plugin's [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/contact-form-7-honeypot) page. As of v1.10, all translation is handled there. Thank you to the polyglots that contribute!
 
 = IMPORTANT NOTES: =
 If you are using CF7 3.6+, use the latest version of this plugin. If you are using an older version of CF7, you will need to use [CF7 Honeypot v1.3](http://downloads.wordpress.org/plugin/contact-form-7-honeypot.1.3.zip).
@@ -64,6 +64,9 @@ For examples of the above, please see this [recipe Gist](https://gist.github.com
 * Yep! See the **Installation** section for more details and [this Gist](https://gist.github.com/nocean/953b1362b63bd3ecf68c) for examples.
 
 == Changelog ==
+= 1.10 =
+Updates for Function/Class changes related to CF7 4.6. Removed plugin local language support, instead use translate.wordpress.org.
+
 = 1.9 =
 Added i18n support, French language pack. Thx chris-kns
 

@@ -5,7 +5,7 @@ Plugin URI: http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-word
 Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
 Author: Nocean
 Author URI: http://www.nocean.ca
-Version: 1.11
+Version: 1.12
 Text Domain: contact-form-7-honeypot
 Domain Path: /languages/
 */
@@ -115,16 +115,19 @@ function wpcf7_honeypot_formtag_handler( $tag ) {
 	$atts['message'] = apply_filters('wpcf7_honeypot_accessibility_message', __('Please leave this field empty.','contact-form-7-honeypot'));
 	$atts['name'] = $tag->name;
 	$atts['type'] = $tag->type;
+	$atts['validautocomplete'] = $tag->get_option('validautocomplete');
 	$atts['nomessage'] = $tag->get_option('nomessage');
 	$atts['validation_error'] = $validation_error;
 	$atts['css'] = apply_filters('wpcf7_honeypot_container_css', 'display:none !important; visibility:hidden !important;');
 	$inputid = (!empty($atts['id'])) ? 'id="'.$atts['id'].'" ' : '';
 	$inputid_for = ($inputid) ? 'for="'.$atts['id'].'" ' : '';
+	$autocomplete_value = ($atts['validautocomplete']) ? 'off' : 'nope';
+
 	$html = '<span class="wpcf7-form-control-wrap ' . $atts['name'] . '-wrap" style="'.$atts['css'].'">';
 	if (!$atts['nomessage']) {
 		$html .= '<label ' . $inputid_for . ' class="hp-message">'.$atts['message'].'</label>';
 	}
-	$html .= '<input ' . $inputid . 'class="' . $atts['class'] . '"  type="text" name="' . $atts['name'] . '" value="" size="40" tabindex="-1" autocomplete="nope" />';
+	$html .= '<input ' . $inputid . 'class="' . $atts['class'] . '"  type="text" name="' . $atts['name'] . '" value="" size="40" tabindex="-1" autocomplete="'.$autocomplete_value.'" />';
 	$html .= $validation_error . '</span>';
 
 	// Hook for filtering finished Honeypot form element.
@@ -211,6 +214,16 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 						</th>
 						<td>
 							<input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-class' ); ?>" />
+						</td>
+					</tr>
+
+					<tr>
+						<th scope="row">
+							<label for="<?php echo esc_attr( $args['content'] . '-validautocomplete' ); ?>"><?php echo esc_html( __( 'Use W3C Valid Autocomplete (optional)', 'contact-form-7-honeypot' ) ); ?></label>
+						</th>
+						<td>
+							<input type="checkbox" name="validautocomplete:true" id="<?php echo esc_attr( $args['content'] . '-validautocomplete' ); ?>" class="validautocompletevalue option" /><br />
+							<em><?php echo __('See <a href="https://wordpress.org/support/topic/w3c-validation-in-1-11-explanation-and-work-arounds/" target="_blank" rel="noopener">here</a> for more details. If you\'re unsure, leave this unchecked.','contact-form-7-honeypot'); ?></em>
 						</td>
 					</tr>
 

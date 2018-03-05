@@ -5,7 +5,7 @@ Plugin URI: http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-word
 Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
 Author: Nocean
 Author URI: http://www.nocean.ca
-Version: 1.12
+Version: 1.13
 Text Domain: contact-form-7-honeypot
 Domain Path: /languages/
 */
@@ -108,7 +108,7 @@ function wpcf7_honeypot_formtag_handler( $tag ) {
 	$validation_error = wpcf7_get_validation_error( $tag->name );
 
 	$class = wpcf7_form_controls_class( 'text' );
-	
+	$unique_id = uniqid('hp');
 	$atts = array();
 	$atts['class'] = $tag->get_class_option( $class );
 	$atts['id'] = $tag->get_option( 'id', 'id', true );
@@ -116,6 +116,7 @@ function wpcf7_honeypot_formtag_handler( $tag ) {
 	$atts['name'] = $tag->name;
 	$atts['type'] = $tag->type;
 	$atts['validautocomplete'] = $tag->get_option('validautocomplete');
+	$atts['move_inline_css'] = $tag->get_option('move-inline-css');
 	$atts['nomessage'] = $tag->get_option('nomessage');
 	$atts['validation_error'] = $validation_error;
 	$atts['css'] = apply_filters('wpcf7_honeypot_container_css', 'display:none !important; visibility:hidden !important;');
@@ -123,7 +124,18 @@ function wpcf7_honeypot_formtag_handler( $tag ) {
 	$inputid_for = ($inputid) ? 'for="'.$atts['id'].'" ' : '';
 	$autocomplete_value = ($atts['validautocomplete']) ? 'off' : 'nope';
 
-	$html = '<span class="wpcf7-form-control-wrap ' . $atts['name'] . '-wrap" style="'.$atts['css'].'">';
+	// Check if we should move the CSS off the element and into the footer [todo: find a way to move to head]
+	if (!empty($atts['move_inline_css'])) {
+		$hp_css = '#'.$unique_id.' {'.$atts['css'].'}';
+		wp_register_style( 'wpcf7-'.$unique_id.'-inline', false);
+		wp_enqueue_style( 'wpcf7-'.$unique_id.'-inline' );
+		wp_add_inline_style( 'wpcf7-'.$unique_id.'-inline', $hp_css );
+		$el_css = '';
+	} else {
+		$el_css = 'style="'.$atts['css'].'"';
+	}
+
+	$html = '<span id="'.$unique_id.'" class="wpcf7-form-control-wrap ' . $atts['name'] . '-wrap" '.$el_css.'>';
 	if (!$atts['nomessage']) {
 		$html .= '<label ' . $inputid_for . ' class="hp-message">'.$atts['message'].'</label>';
 	}
@@ -152,7 +164,7 @@ function wpcf7_honeypot_filter ( $result, $tag ) {
 
 	$value = isset( $_POST[$name] ) ? $_POST[$name] : '';
 	
-	if ( $value != '' ) {
+	if ( $value != '' || !isset( $_POST[$name] ) ) {
 		$result['valid'] = false;
 		$result['reason'] = array( $name => wpcf7_get_message( 'spam' ) );
 	}
@@ -224,6 +236,16 @@ function wpcf7_tg_pane_honeypot($contact_form, $args = '') {
 						<td>
 							<input type="checkbox" name="validautocomplete:true" id="<?php echo esc_attr( $args['content'] . '-validautocomplete' ); ?>" class="validautocompletevalue option" /><br />
 							<em><?php echo __('See <a href="https://wordpress.org/support/topic/w3c-validation-in-1-11-explanation-and-work-arounds/" target="_blank" rel="noopener">here</a> for more details. If you\'re unsure, leave this unchecked.','contact-form-7-honeypot'); ?></em>
+						</td>
+					</tr>
+
+					<tr>
+						<th scope="row">
+							<label for="<?php echo esc_attr( $args['content'] . '-move-inline-css' ); ?>"><?php echo esc_html( __( 'Move inline CSS (optional)', 'contact-form-7-honeypot' ) ); ?></label>
+						</th>
+						<td>
+							<input type="checkbox" name="move-inline-css:true" id="<?php echo esc_attr( $args['content'] . '-move-inline-css' ); ?>" class="move-inline-css-value option" /><br />
+							<em><?php echo __('Moves the CSS to hide the honeypot from the element to the footer of the page. May help confuse bots.','contact-form-7-honeypot'); ?></em>
 						</td>
 					</tr>
 

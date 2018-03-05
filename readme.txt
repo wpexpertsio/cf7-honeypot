@@ -1,8 +1,8 @@
 === Contact Form 7 Honeypot ===
 Tags: honeypot, antispam, captcha, spam, form, forms, contact form 7, contactform7, contact form, cf7, cforms, Contact Forms 7, Contact Forms, contacts
 Requires at least: 3.5
-Tested up to: 4.8.2
-Stable tag: 1.12
+Tested up to: 4.9.4
+Stable tag: 1.13
 Contributors: DaoByDesign
 Donate link: http://www.nocean.ca/buy-us-a-coffee/
 License: GPLv2 or later
@@ -68,6 +68,9 @@ For examples of the above, please see this [recipe Gist](https://gist.github.com
 * This is by design, and we recommend leaving this validation error for enhanced improvement of the plugin. However, there is a simple work around. See [here](https://wordpress.org/support/topic/w3c-validation-in-1-11-explanation-and-work-arounds/) for details.
 
 == Changelog ==
+= 1.13 =
+Additional functionality to improve spam-stopping power.
+
 = 1.12 =
 Introduces ability to force W3C compliance. See [here](https://wordpress.org/support/topic/w3c-validation-in-1-11-explanation-and-work-arounds/) for details.
 

@@ -29,15 +29,11 @@ Domain Path: /languages/
 */
 
 /**
-* Load textdomain
-*
-* Technically depreciated, all translations are handled via 
-* https://translate.wordpress.org/projects/wp-plugins/contact-form-7-honeypot
-* Leaving in the code for now.
-*/
+ * Load textdomain
+ */
 add_action( 'plugins_loaded', 'wpcf7_honeypot_load_textdomain' );
 function wpcf7_honeypot_load_textdomain() {
-	load_plugin_textdomain( 'contact-form-7-honeypot', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'contact-form-7-honeypot' );
 }
 
 

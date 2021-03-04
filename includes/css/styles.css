@@ -1,0 +1,144 @@
+#honeypot4cf7-admin-page * {
+	box-sizing: border-box;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__title {
+	min-height: 43px;
+	line-height: 43px;
+	padding-left: 64px;
+	background-image: url('../images/honeypot-icon-small.png');
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__title span {
+	font-size: 12px;
+	color: #999;
+	font-style: italic;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__primary, #honeypot4cf7-admin-page .honeypot4cf7-admin__secondary {
+	width: 100%;
+}
+
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__box {
+	background: white;
+	padding: 20px;
+	border: 1px solid #ccc;
+	margin-top: 1.5em;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__box h3 {
+	text-transform: uppercase;
+	margin: 0;
+}
+
+.honeypot4cf7_admin__support-link {
+	float: right;
+	text-transform: uppercase;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__box--coffee {
+	//padding-top: 20%;
+	background-image: url('../images/banner-coffee-dark.jpg');
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-size: cover;
+	color: white;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__coffee-message {
+	font-size: 18px;
+	font-weight: 500;
+	text-align: center;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__coffee-message .dashicons-coffee {
+	vertical-align: middle;
+}
+
+#honeypot4cf7-admin-page .form-table th, #honeypot4cf7-admin-page .form-table td {
+	padding: 20px 10px;
+}
+
+#honeypot4cf7-admin-page .form-table th {
+	width: 300px;
+}
+
+#honeypot4cf7-admin-page .form-table .description {
+	border-bottom: 1px solid #ddd;
+	padding-top: 0;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__box--count-message p {
+	font-size: 18px;
+	text-align: center;
+	font-style: italic;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__box--count-message .dashicons {
+	color: #007cba;
+	font-size: 30px;
+	width: 30px;
+	height: 30px;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__rate-us {
+	text-align: center;
+	font-size: 14px;
+	text-transform: uppercase;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7-admin__rate-us .honeypot4cf7-admin__stars a {
+	color: #fdb72c;
+	text-decoration: none;
+}
+
+#honeypot4cf7-admin-page  .honeypot4cf7__banner-ad {
+	text-align: center;
+	margin-top: 1.5em;
+}
+
+#honeypot4cf7-admin-page  .honeypot4cf7__banner-ad img {
+	max-width: 100%;
+}
+
+#honeypot4cf7-admin-page  .honeypot4cf7__banner-ad--1b {
+	display: none;
+}
+
+#honeypot4cf7-admin-page .honeypot4cf7__banner-ad-message {
+	text-align: center;
+	max-width: 400px;
+	margin: 0 auto;
+	font-size: 16px;
+}
+
+@media screen and (min-width: 1024px) {
+	#honeypot4cf7-admin-page .honeypot4cf7-admin__primary, #honeypot4cf7-admin-page .honeypot4cf7-admin__secondary {
+		float: left;
+	}
+
+	#honeypot4cf7-admin-page .honeypot4cf7-admin__primary {
+		width: 60%;
+		margin-right: 2%;
+	}
+
+	#honeypot4cf7-admin-page .honeypot4cf7-admin__secondary {
+		width: 38%;
+	}
+}
+
+
+@media screen and (max-width: 599px) {
+	#honeypot4cf7-admin-page  .honeypot4cf7__banner-ad--1b {
+		display: block;
+	}
+
+	#honeypot4cf7-admin-page  .honeypot4cf7__banner-ad--1a {
+		display: none;
+	}
+}

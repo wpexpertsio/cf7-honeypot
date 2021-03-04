@@ -1,49 +1,50 @@
-=== Contact Form 7 Honeypot ===
-Tags: honeypot, antispam, captcha, spam, form, forms, contact form 7, contactform7, contact form, cf7, cforms, Contact Forms 7, Contact Forms, contacts
-Requires at least: 3.5
-Tested up to: 5.0
-Stable tag: 1.14
-Contributors: DaoByDesign
+=== Honeypot for Contact Form 7 ===
+Tags: honeypot, antispam, anti-spam, captcha, spam, bots, form, forms, contact form 7, contactform7, contact form, cf7
+Requires at least: 4.8
+Tested up to: 5.7
+Stable tag: trunk
+Contributors: nocean, DaoByDesign
 Donate link: http://www.nocean.ca/buy-us-a-coffee/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Contact Form 7 Honeypot - Adds honeypot anti-spam functionality to CF7 forms.
+Honeypot for Contact Form 7 adds honeypot non-intrusive anti-spam functionality to CF7 forms.
 
 == Description ==
 
-This simple addition to the wonderful <a href="http://wordpress.org/extend/plugins/contact-form-7/">Contact Form 7</a> (CF7) plugin adds basic honeypot anti-spam functionality to thwart spambots without the need for an ugly captcha.
+This simple addon module to the wonderful [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) (CF7) plugin adds basic honeypot anti-spam functionality to thwart spambots without the need for an ugly captcha.
 
-The principle of a honeypot is simple -- <em>bots are stupid</em>. While some spam is hand-delivered, the vast majority is submitted by bots scripted in a specific (wide-scope) way to submit spam to the largest number of form types. In this way they somewhat blindly fill in fields, regardless of whether the field should be filled in or not. This is how a honeypot catches the bot -- it introduces an additional field in the form that if filled out will cause the form not to validate.
+The principle of a honeypot is simple -- *bots are stupid*. While some spam is hand-delivered, the vast majority is submitted by bots scripted in a specific (wide-scope) way to submit spam to the largest number of form types. In this way they somewhat blindly fill in fields, regardless of whether the field should be filled in or not. This is how a honeypot catches the bot -- it introduces an additional field in the form that if filled out will trigger the honeypot and flag the submission as spam.
 
-Follow us on [Twitter](https://twitter.com/NoceanCA) and on [Facebook](https://www.facebook.com/nocean.ca/) for updates and news.
+= RECOMMENDED PLUGIN =
+We highly recommend [Flamingo](https://wordpress.org/plugins/flamingo/) with CF7 and this plugin. Using Flamingo allows you to track spam submissions (via `inbound messages / spam` tab in Flamingo), showing you what got caught in the honeypot and why. Be sure to check your Honeypot settings to turn storing the honeypot on for this.
 
-<strong>Support can be found [here](http://wordpress.org/support/plugin/contact-form-7-honeypot).</strong>
+= SUPPORT / SOCIALS =
+Support can be found [here](http://wordpress.org/support/plugin/contact-form-7-honeypot). Follow us on [Twitter](https://twitter.com/NoceanCA) and on [Facebook](https://www.facebook.com/nocean.ca/) for updates and news.
 
-Visit the [Contact Form 7 Honeypot plugin page](http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-wordpress-plugin/) for additional information or to [buy us a coffee](http://www.nocean.ca/buy-us-a-coffee/) to say thanks.
+Visit the [Honeypot for Contact Form 7 plugin page](http://www.nocean.ca/plugins/honeypot-module-for-contact-form-7-wordpress-plugin/) for additional information or to **[buy us a coffee](http://www.nocean.ca/buy-us-a-coffee/)** to say thanks.
 
-= Localization/Translation =
-If you'd like to translate this plugin, please visit the plugin's [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/contact-form-7-honeypot) page. As of v1.10, all translation is handled there. Thank you to the polyglots that contribute!
+= PRIVACY =
+This plugin does not track users, store any user data, send user data to external servers, nor does it use cookies. This is an addon plugin, and requires Contact Form 7. Please review Contact Form 7's privacy policies for more information.
 
-= IMPORTANT NOTES: =
-If you are using CF7 3.6+, use the latest version of this plugin. If you are using an older version of CF7, you will need to use [CF7 Honeypot v1.3](http://downloads.wordpress.org/plugin/contact-form-7-honeypot.1.3.zip).
+= LOCALIZATION / TRANSLATION =
+If you'd like to translate this plugin, please visit the plugin's [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/contact-form-7-honeypot) page. As of v1.10, all translation is handled there. Version 2.0 brings a bunch of new strings in need of translation, so a huge thank you to the polyglots that contribute!
+
+= IMPORTANT NOTES =
+The latest version of this plugin is designed to work with the latest version of Contact Form 7 and Wordpress. If you are using older versions of either, you're best to find the version of this plugin released around the same time as the version you're using. You can access older versions of this plugin by clicking *Advanced View* on the right of the plugin's page and scrolling to the bottom of the plugin's page. **Use at your own risk**. We strongly recommend upgrading to the latest versions whenever possible.
 
 == Installation ==
 
-1. Install using the Wordpress "Add Plugin" feature -- just search for "Contact Form 7 Honeypot".
+1. Install using the Wordpress "Add Plugin" feature -- just search for "Honeypot for Contact Form 7".
 1. Confirm that [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) is installed and activated. Then activate this plugin.
 1. Edit a form in Contact Form 7.
 1. Choose "Honeypot" from the CF7 tag generator. <em>Recommended: change the honeypot element's ID.</em>
 1. Insert the generated tag anywhere in your form. The added field uses inline CSS styles to hide the field from your visitors.
 
-= Installation & Usage Video =
-[youtube https://www.youtube.com/watch?v=yD2lBrU0gA0]
-For the more visually-minded, here is a [short video showing how to install and use CF7 Honeypot](https://www.youtube.com/watch?v=yD2lBrU0gA0) from the fine folks at RoseApple Media. **Note:** This video was not produced by the CF7 Honeypot developer.
-
 = Altering the Honeypot Output HTML [ADVANCED] =
 While the basic settings should keep most people happy, we've added several filters for you to further customize the honeypot field. The three filters available are:
 
-* `wpcf7_honeypot_accessibility_message` - Adjusts the default text for the (hidden) accessibility message.
+* `wpcf7_honeypot_accessibility_message` - Adjusts the default text for the (hidden) accessibility message (**can now be done on the settings page**).
 * `wpcf7_honeypot_container_css` - Adjusts the CSS that is applied to the honeypot container to keep it hidden from view.
 * `wpcf7_honeypot_html_output` - Adjusts the entire HTML output of the honeypot element.
 
@@ -53,21 +54,34 @@ For examples of the above, please see this [recipe Gist](https://gist.github.com
 
 = Will this module stop all my contact form spam? =
 
-* Probably not. But it should reduce it to a level whereby you don't require any additional spam challenges (CAPTCHA, math questions, etc.).
+Probably not. But it should reduce it to a level whereby you don't require any additional spam challenges (CAPTCHA, math questions, etc.).
 
 = Are honeypots better than CAPTCHAs? =
 
-* This largely depends on the quality of the CAPTCHA. Unfortunately the more difficult a CAPTCHA is to break, the more unfriendly it is to the end user. This honeypot module was created because we don't like CAPTCHAs cluttering up our forms. Our recommendation is to try this module first, and if you find that it doesn't stop enough spam, then employ more challenging anti-spam techniques.
+This largely depends on the quality of the CAPTCHA. Unfortunately the more difficult a CAPTCHA is to break, the more unfriendly it is to the end user. This honeypot module was created because I don't like CAPTCHAs cluttering up my forms. My recommendation is to try this module first, and if you find that it doesn't stop enough spam, then employ more challenging anti-spam techniques.
 
 = Can I modify the HTML this plugin outputs? =
 
-* Yep! See the **Installation** section for more details and [this Gist](https://gist.github.com/nocean/953b1362b63bd3ecf68c) for examples.
+Yep! See the **Installation** section for more details and [this Gist](https://gist.github.com/nocean/953b1362b63bd3ecf68c) for examples.
 
 = My form is not validating with a W3C validation tool =
 
-* This is by design, and we recommend leaving this validation error for enhanced improvement of the plugin. However, there is a simple work around. See [here](https://wordpress.org/support/topic/w3c-validation-in-1-11-explanation-and-work-arounds/) for details.
+As of version 2.0, this shouldn't be the case any longer. However, if it is for some reason, there is a simple work around. See [here](https://wordpress.org/support/topic/w3c-validation-in-1-11-explanation-and-work-arounds/) for details.
+
+= Does this plugin work with Flamingo? =
+
+You bet! If the honeypot trap is triggered, an email isn't sent, but the form submission is added to the **spam** section of Flamingo so you can review what tripped things up.
+
+= Why do you have affiliate ads on your settings page? =
+I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely grateful to the numerous users that have donated to the plugin's development over the years, and while that's awesome, I don't think donations will ever come remotely close to covering the time and effort it takes to maintain and support a plugin that now has **nearly 1.5 million downloads** and **more than 300,000 active installs**.
 
 == Changelog ==
+= 2.0 =
+A significant update with a bunch of new things. Please see the [release notes](http://www.nocean.ca/blog/honeypot-for-contact-form-7-v2-0/).
+
+= 1.14.1 =
+Minor update to change name to comply with CF7 copyright notice.
+
 = 1.14 =
 Added do-not-store for when forms are stored in the DB (i.e. Flamingo). Improved wrapper ID masking and customization.
 
@@ -126,6 +140,9 @@ Small update for W3C compliance. Thanks [Jeff](http://wordpress.org/support/topi
 * Initial release.
 
 == Upgrade Notice ==
+= 2.0 =
+Recommended update. Much improved spam-tracking support. Requires CF7 5.0+ and WordPress 4.8+.
+
 = 1.8 =
 Recommended update for all users using CF7 3.6 and above.
 

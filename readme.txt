@@ -76,6 +76,9 @@ You bet! If the honeypot trap is triggered, an email isn't sent, but the form su
 I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely grateful to the numerous users that have donated to the plugin's development over the years, and while that's awesome, I don't think donations will ever come remotely close to covering the time and effort it takes to maintain and support a plugin that now has **nearly 1.5 million downloads** and **more than 300,000 active installs**.
 
 == Changelog ==
+= 2.0.1 =
+Hotfix for issue with options not being set on upgrade.
+
 = 2.0 =
 A significant update with a bunch of new things. Please see the [release notes](http://www.nocean.ca/blog/honeypot-for-contact-form-7-v2-0/).
 

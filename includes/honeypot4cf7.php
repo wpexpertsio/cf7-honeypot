@@ -51,7 +51,7 @@ function honeypot4cf7_form_tag_handler( $tag ) {
 	
 	$placeholder = (string) reset( $tag->values );
 
-	$accessibility_message = ($honeypot4cf7_config['accessibility_message']) ? $honeypot4cf7_config['accessibility_message'] : __('Please leave this field empty.',HONEYPOT4CF7_TEXT_DOMAIN);
+	$accessibility_message = ($honeypot4cf7_config['accessibility_message']) ? $honeypot4cf7_config['accessibility_message'] : __('Please leave this field empty.','contact-form-7-honeypot');
 
 	$atts = array(
 		'class' 			=> $tag->get_class_option( $class ),
@@ -130,7 +130,7 @@ function honeypot4cf7_spam_check($spam, $submission) {
 			$spam = true;
 			$submission->add_spam_log( array(
 				'agent' => 'honeypot',
-				'reason' => __( 'Something is stuck in the honey. Field ID = '. $hpid, HONEYPOT4CF7_TEXT_DOMAIN ),
+				'reason' => __( 'Something is stuck in the honey. Field ID = '. $hpid, 'contact-form-7-honeypot' ),
 			) );
 
 			$honeypot4cf7_config = get_option('honeypot4cf7_config');
@@ -156,13 +156,13 @@ add_action( 'wpcf7_admin_init', 'honeypot4cf7_generate_form_tag', 10, 0 );
 
 function honeypot4cf7_generate_form_tag() {
 	$tag_generator = WPCF7_TagGenerator::get_instance();
-	$tag_generator->add( 'honeypot', __( 'Honeypot', HONEYPOT4CF7_TEXT_DOMAIN ), 'honeypot4cf7_form_tag_generator' );
+	$tag_generator->add( 'honeypot', __( 'Honeypot', 'contact-form-7-honeypot' ), 'honeypot4cf7_form_tag_generator' );
 }
 
 function honeypot4cf7_form_tag_generator($contact_form, $args = '') {
 	$args = wp_parse_args( $args, array() );
-	$description = __( "Generate a form-tag for a spam-stopping honeypot field. For more details, see %s.", HONEYPOT4CF7_TEXT_DOMAIN );
-	$desc_link = '<a href="https://wordpress.org/plugins/contact-form-7-honeypot/" target="_blank">'.__( 'Honeypot for CF7', HONEYPOT4CF7_TEXT_DOMAIN ).'</a>';
+	$description = __( "Generate a form-tag for a spam-stopping honeypot field. For more details, see %s.", 'contact-form-7-honeypot' );
+	$desc_link = '<a href="https://wordpress.org/plugins/contact-form-7-honeypot/" target="_blank">'.__( 'Honeypot for CF7', 'contact-form-7-honeypot' ).'</a>';
 	?>
 	<div class="control-box">
 		<fieldset>
@@ -171,17 +171,17 @@ function honeypot4cf7_form_tag_generator($contact_form, $args = '') {
 			<table class="form-table"><tbody>
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php echo esc_html( __( 'Name', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></label>
+						<label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php echo esc_html( __( 'Name', 'contact-form-7-honeypot' ) ); ?></label>
 					</th>
 					<td>
 						<input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /><br>
-						<em><?php echo esc_html( __( 'This can be anything, but should be changed from the default generated "honeypot". For better security, change "honeypot" to something more appealing to a bot, such as text including "email" or "website".', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></em>
+						<em><?php echo esc_html( __( 'This can be anything, but should be changed from the default generated "honeypot". For better security, change "honeypot" to something more appealing to a bot, such as text including "email" or "website".', 'contact-form-7-honeypot' ) ); ?></em>
 					</td>
 				</tr>
 
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php echo esc_html( __( 'ID (optional)', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></label>
+						<label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php echo esc_html( __( 'ID (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 					</th>
 					<td>
 						<input type="text" name="id" class="idvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-id' ); ?>" />
@@ -190,7 +190,7 @@ function honeypot4cf7_form_tag_generator($contact_form, $args = '') {
 
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-class' ); ?>"><?php echo esc_html( __( 'Class (optional)', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></label>
+						<label for="<?php echo esc_attr( $args['content'] . '-class' ); ?>"><?php echo esc_html( __( 'Class (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 					</th>
 					<td>
 						<input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-class' ); ?>" />
@@ -199,51 +199,51 @@ function honeypot4cf7_form_tag_generator($contact_form, $args = '') {
 
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-wrapper-id' ); ?>"><?php echo esc_html( __( 'Wrapper ID (optional)', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></label>
+						<label for="<?php echo esc_attr( $args['content'] . '-wrapper-id' ); ?>"><?php echo esc_html( __( 'Wrapper ID (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 					</th>
 					<td>
 						<input type="text" name="wrapper-id" class="wrapper-id-value oneline option" id="<?php echo esc_attr( $args['content'] . '-wrapper-id' ); ?>" /><br>
-						<em><?php echo esc_html( __( 'By default the markup that wraps this form item has a random ID. You can customize it here. If you\'re unsure, leave blank.', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></em>
+						<em><?php echo esc_html( __( 'By default the markup that wraps this form item has a random ID. You can customize it here. If you\'re unsure, leave blank.', 'contact-form-7-honeypot' ) ); ?></em>
 					</td>
 				</tr>
 
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-values' ); ?>"><?php echo esc_html( __( 'Placeholder (optional)', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></label>
+						<label for="<?php echo esc_attr( $args['content'] . '-values' ); ?>"><?php echo esc_html( __( 'Placeholder (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 					</th>
 					<td>
 						<input type="text" name="values" class="oneline" id="<?php echo esc_attr( $args['content'] . '-values' ); ?>" /><br>
-						<em><?php echo esc_html( __( 'If using placeholders on other fields, this can help honeypot mimic a "real" field. If you\'re unsure, leave blank.', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></em>
+						<em><?php echo esc_html( __( 'If using placeholders on other fields, this can help honeypot mimic a "real" field. If you\'re unsure, leave blank.', 'contact-form-7-honeypot' ) ); ?></em>
 					</td>
 				</tr>
 
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-validautocomplete' ); ?>"><?php echo esc_html( __( 'Use Standard Autocomplete Value (optional)', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></label>
+						<label for="<?php echo esc_attr( $args['content'] . '-validautocomplete' ); ?>"><?php echo esc_html( __( 'Use Standard Autocomplete Value (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 					</th>
 					<td>
 						<input type="checkbox" name="validautocomplete:true" id="<?php echo esc_attr( $args['content'] . '-validautocomplete' ); ?>" class="validautocompletevalue option" /><br />
-						<em><?php echo __('To assure the honeypot isn\'t auto-completed by a browser, we add an atypical "autocomplete" attribute value. If you have any problems with this, you can switch it to the more standard (but less effective) "off" value. If you\'re unsure, leave this unchecked.', HONEYPOT4CF7_TEXT_DOMAIN); ?></em>
+						<em><?php echo __('To assure the honeypot isn\'t auto-completed by a browser, we add an atypical "autocomplete" attribute value. If you have any problems with this, you can switch it to the more standard (but less effective) "off" value. If you\'re unsure, leave this unchecked.', 'contact-form-7-honeypot'); ?></em>
 					</td>
 				</tr>
 
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-move-inline-css' ); ?>"><?php echo esc_html( __( 'Move inline CSS (optional)', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></label>
+						<label for="<?php echo esc_attr( $args['content'] . '-move-inline-css' ); ?>"><?php echo esc_html( __( 'Move inline CSS (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 					</th>
 					<td>
 						<input type="checkbox" name="move-inline-css:true" id="<?php echo esc_attr( $args['content'] . '-move-inline-css' ); ?>" class="move-inline-css-value option" /><br />
-						<em><?php echo __('Moves the CSS to hide the honeypot from the element to the footer of the page. May help confuse bots.',HONEYPOT4CF7_TEXT_DOMAIN); ?></em>
+						<em><?php echo __('Moves the CSS to hide the honeypot from the element to the footer of the page. May help confuse bots.','contact-form-7-honeypot'); ?></em>
 					</td>
 				</tr>
 
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>"><?php echo esc_html( __( 'Disable Accessibility Label (optional)', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?></label>
+						<label for="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>"><?php echo esc_html( __( 'Disable Accessibility Label (optional)', 'contact-form-7-honeypot' ) ); ?></label>
 					</th>
 					<td>
 						<input type="checkbox" name="nomessage:true" id="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>" class="messagekillvalue option" /><br />
-						<em><?php echo __('If checked, the accessibility label will not be generated. This is not recommended, but may improve spam blocking. If you\'re unsure, leave this unchecked.',HONEYPOT4CF7_TEXT_DOMAIN); ?></em>
+						<em><?php echo __('If checked, the accessibility label will not be generated. This is not recommended, but may improve spam blocking. If you\'re unsure, leave this unchecked.','contact-form-7-honeypot'); ?></em>
 					</td>
 				</tr>
 
@@ -255,7 +255,7 @@ function honeypot4cf7_form_tag_generator($contact_form, $args = '') {
 		<input type="text" name="honeypot" class="tag code" readonly="readonly" onfocus="this.select()" />
 
 		<div class="submitbox">
-			<input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr( __( 'Insert Tag', HONEYPOT4CF7_TEXT_DOMAIN ) ); ?>" />
+			<input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr( __( 'Insert Tag', 'contact-form-7-honeypot' ) ); ?>" />
 		</div>
 
 		<br class="clear" />

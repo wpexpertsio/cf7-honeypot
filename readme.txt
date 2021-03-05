@@ -3,6 +3,7 @@ Tags: honeypot, antispam, anti-spam, captcha, spam, bots, form, forms, contact f
 Requires at least: 4.8
 Tested up to: 5.7
 Stable tag: trunk
+Requires PHP: 5.6
 Contributors: nocean, DaoByDesign
 Donate link: http://www.nocean.ca/buy-us-a-coffee/
 License: GPLv2 or later
@@ -75,7 +76,15 @@ You bet! If the honeypot trap is triggered, an email isn't sent, but the form su
 = Why do you have affiliate ads on your settings page? =
 I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely grateful to the numerous users that have donated to the plugin's development over the years, and while that's awesome, I don't think donations will ever come remotely close to covering the time and effort it takes to maintain and support a plugin that now has **nearly 1.5 million downloads** and **more than 300,000 active installs**.
 
+== Screenshots ==
+
+1. Global Honeypot Settings
+2. Honeypot CF7 Form Tag Settings
+
 == Changelog ==
+= 2.0.2 =
+Replaced text domain constant with plain string for better i18n compatability in some plugins.
+
 = 2.0.1 =
 Hotfix for issue with options not being set on upgrade.
 

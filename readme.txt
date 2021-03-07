@@ -82,8 +82,11 @@ I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely
 2. Honeypot CF7 Form Tag Settings
 
 == Changelog ==
+= 2.0.3 =
+General code cleanup, better adherence to WP coding standards and fixes for i18n functions.
+
 = 2.0.2 =
-Replaced text domain constant with plain string for better i18n compatability in some plugins.
+Replaced text domain constant with plain string for better i18n compatability.
 
 = 2.0.1 =
 Hotfix for issue with options not being set on upgrade.

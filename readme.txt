@@ -82,6 +82,9 @@ I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely
 2. Honeypot CF7 Form Tag Settings
 
 == Changelog ==
+= 2.0.4 =
+Better error checking for missing config problems.
+
 = 2.0.3 =
 General code cleanup, better adherence to WP coding standards and fixes for i18n functions.
 
@@ -155,6 +158,9 @@ Small update for W3C compliance. Thanks [Jeff](http://wordpress.org/support/topi
 * Initial release.
 
 == Upgrade Notice ==
+= 2.0.4 =
+This fixes some php notices about missing settings. Recommended update.
+
 = 2.0 =
 Recommended update. Much improved spam-tracking support. Requires CF7 5.0+ and WordPress 4.8+.
 

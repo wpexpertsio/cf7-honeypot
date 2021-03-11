@@ -9,7 +9,7 @@
 add_action( 'wpcf7_init', 'honeypot4cf7_add_form_tag', 10 );
 function honeypot4cf7_add_form_tag() {
 	
-	$honeypot4cf7_config = get_option( 'honeypot4cf7_config' );
+	$honeypot4cf7_config = honeypot4cf7_get_config();
 	$do_not_store = ( empty( $honeypot4cf7_config['store_honeypot'] ) ) ? true : false;
 
 	// Test if new 4.6+ functions exists
@@ -46,7 +46,7 @@ function honeypot4cf7_form_tag_handler( $tag ) {
 
 	$validation_error = wpcf7_get_validation_error( $tag->name );
 
-	$honeypot4cf7_config = get_option( 'honeypot4cf7_config' );
+	$honeypot4cf7_config = honeypot4cf7_get_config();
 
 	$class = wpcf7_form_controls_class( 'text' );
 	
@@ -142,7 +142,7 @@ function honeypot4cf7_spam_check( $spam, $submission ) {
 				),
 			) );
 
-			$honeypot4cf7_config = get_option( 'honeypot4cf7_config' );
+			$honeypot4cf7_config = honeypot4cf7_get_config();
 			$honeypot4cf7_config['honeypot_count'] = ( isset( $honeypot4cf7_config['honeypot_count'] ) ) ? $honeypot4cf7_config['honeypot_count'] + 1 : 1;
 			update_option( 'honeypot4cf7_config', $honeypot4cf7_config );
 			

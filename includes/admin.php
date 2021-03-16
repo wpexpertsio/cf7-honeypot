@@ -11,8 +11,15 @@ function honeypot4cf7_init() {
 	// Get Options
 	$honeypot4cf7_config = honeypot4cf7_get_config();
 
+	// CF7 is not enabled
 	if ( is_admin() && current_user_can( 'activate_plugins' ) &&  !is_plugin_active( HONEYPOT4CF7_DEP_PLUGIN ) && empty( $honeypot4cf7_config['honeypot_cf7_req_msg_dismissed'] ) ) {
 		add_action( 'admin_notices', 'honeypot4cf7_nocf7_notice' );
+	}
+
+	// CF7 is enabled, but it is OOOOOLD. Display message and deactivate Honeypot.
+	if ( is_admin() && current_user_can( 'activate_plugins' ) && is_plugin_active( HONEYPOT4CF7_DEP_PLUGIN ) && defined('WPCF7_VERSION') && version_compare(WPCF7_VERSION, '3.0', '<' ) ) {
+		add_action( 'admin_notices', 'honeypot4cf7_oldcf7_notice' );
+		deactivate_plugins( HONEYPOT4CF7_PLUGIN_BASENAME );
 	}
 
 	// This resets dismissed notice
@@ -30,6 +37,22 @@ function honeypot4cf7_nocf7_notice() {
 			printf(
 				/* translators: %s: Link to Contact Form 7 plugin page. */
 				__('%s must be installed and activated for the CF7 Honeypot plugin to work', 'contact-form-7-honeypot'),
+				'<a href="'.admin_url('plugin-install.php?tab=search&s=contact+form+7').'">'.__('Contact Form 7','contact-form-7-honeypot').'</a>'
+			); 
+			?>
+		</p>
+	</div>
+	<?php
+}
+
+function honeypot4cf7_oldcf7_notice() { 
+	?>
+	<div class="notice error">
+		<p>
+			<?php 
+			printf(
+				/* translators: %s: Link to Contact Form 7 plugin page. */
+				__('The version of %s that is installed will not work with this version of Honeypot for CF7.', 'contact-form-7-honeypot'),
 				'<a href="'.admin_url('plugin-install.php?tab=search&s=contact+form+7').'">'.__('Contact Form 7','contact-form-7-honeypot').'</a>'
 			); 
 			?>

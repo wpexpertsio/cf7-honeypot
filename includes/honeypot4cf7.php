@@ -106,9 +106,20 @@ function honeypot4cf7_form_tag_handler( $tag ) {
  * 		Bots beware!
  * 
  */
-add_filter( 'wpcf7_spam', 'honeypot4cf7_spam_check', 10, 2 );
 
-function honeypot4cf7_spam_check( $spam, $submission ) {
+if ( version_compare(HONEYPOT4CF7_WPCF7_VERSION, '5.3.0', '>=' ) ) {
+	// Newer Spam filter - with log
+	add_filter( 'wpcf7_spam', 'honeypot4cf7_spam_check', 10, 2 );
+} elseif ( version_compare(HONEYPOT4CF7_WPCF7_VERSION, '3.0', '>=' ) ) {
+	// Older Spam filter - no log
+	add_filter( 'wpcf7_spam', 'honeypot4cf7_spam_check', 10, 1 );
+} else {
+	// Real old - unsupported
+	return false;
+}
+
+function honeypot4cf7_spam_check( $spam, $submission = null ) {
+
 	if ( $spam ) {
 		return $spam;
 	}
@@ -133,14 +144,17 @@ function honeypot4cf7_spam_check( $spam, $submission ) {
 		if ( $value != '' ) {
 			// Bots!
 			$spam = true;
-			$submission->add_spam_log( array(
-				'agent' => 'honeypot',
-				'reason' => sprintf(
-					/* translators: %s: honeypot field ID */
-					__( 'Something is stuck in the honey. Field ID = %s', 'contact-form-7-honeypot' ), 
-					$hpid
-				),
-			) );
+			
+			if ( $submission ) {
+				$submission->add_spam_log( array(
+					'agent' => 'honeypot',
+					'reason' => sprintf(
+						/* translators: %s: honeypot field ID */
+						__( 'Something is stuck in the honey. Field ID = %s', 'contact-form-7-honeypot' ), 
+						$hpid
+					),
+				) );
+			}
 
 			$honeypot4cf7_config = honeypot4cf7_get_config();
 			$honeypot4cf7_config['honeypot_count'] = ( isset( $honeypot4cf7_config['honeypot_count'] ) ) ? $honeypot4cf7_config['honeypot_count'] + 1 : 1;

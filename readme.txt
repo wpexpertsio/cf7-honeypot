@@ -17,7 +17,9 @@ This simple addon module to the wonderful [Contact Form 7](https://wordpress.org
 
 The principle of a honeypot is simple -- *bots are stupid*. While some spam is hand-delivered, the vast majority is submitted by bots scripted in a specific (wide-scope) way to submit spam to the largest number of form types. In this way they somewhat blindly fill in fields, regardless of whether the field should be filled in or not. This is how a honeypot catches the bot -- it introduces an additional field in the form that if filled out will trigger the honeypot and flag the submission as spam.
 
-= RECOMMENDED PLUGIN =
+= REQUIRED/RECOMMENDED PLUGINS =
+You will need [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) version 3.0+ at a minimum. It is recommended to use version 5.3+ of CF7, for better spam logging. For the best results, we suggest always using the latest versions of WordPress and CF7.
+
 We highly recommend [Flamingo](https://wordpress.org/plugins/flamingo/) with CF7 and this plugin. Using Flamingo allows you to track spam submissions (via `inbound messages / spam` tab in Flamingo), showing you what got caught in the honeypot and why. Be sure to check your Honeypot settings to turn storing the honeypot on for this.
 
 = SUPPORT / SOCIALS =
@@ -31,7 +33,7 @@ This plugin does not track users, store any user data, send user data to externa
 = LOCALIZATION / TRANSLATION =
 If you'd like to translate this plugin, please visit the plugin's [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/contact-form-7-honeypot) page. As of v1.10, all translation is handled there. Version 2.0 brings a bunch of new strings in need of translation, so a huge thank you to the polyglots that contribute!
 
-= IMPORTANT NOTES =
+= LEGACY/OLD VERSIONS =
 The latest version of this plugin is designed to work with the latest version of Contact Form 7 and Wordpress. If you are using older versions of either, you're best to find the version of this plugin released around the same time as the version you're using. You can access older versions of this plugin by clicking *Advanced View* on the right of the plugin's page and scrolling to the bottom of the plugin's page. **Use at your own risk**. We strongly recommend upgrading to the latest versions whenever possible.
 
 == Installation ==
@@ -74,6 +76,7 @@ As of version 2.0, this shouldn't be the case any longer. However, if it is for 
 You bet! If the honeypot trap is triggered, an email isn't sent, but the form submission is added to the **spam** section of Flamingo so you can review what tripped things up.
 
 = Why do you have affiliate ads on your settings page? =
+
 I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely grateful to the numerous users that have donated to the plugin's development over the years, and while that's awesome, I don't think donations will ever come remotely close to covering the time and effort it takes to maintain and support a plugin that now has **nearly 1.5 million downloads** and **more than 300,000 active installs**.
 
 == Screenshots ==
@@ -82,6 +85,9 @@ I realize not everyone loves ads, but daddy's gotta pay the bills. I'm extremely
 2. Honeypot CF7 Form Tag Settings
 
 == Changelog ==
+= 2.0.5 =
+Improved backwards compatibility. Solves issues when plugin installed on older versions of CF7.
+
 = 2.0.4 =
 Better error checking for missing config problems.
 
@@ -158,6 +164,9 @@ Small update for W3C compliance. Thanks [Jeff](http://wordpress.org/support/topi
 * Initial release.
 
 == Upgrade Notice ==
+= 2.0.5 =
+Fixes some backwards compatibility issues. Recommended update.
+
 = 2.0.4 =
 This fixes some php notices about missing settings. Recommended update.
 

@@ -155,7 +155,7 @@ add_action( 'admin_menu', 'honeypot4cf7_admin_menu' );
 function honeypot4cf7_admin_menu() {
 	add_submenu_page(
 		'wpcf7', 
-		__('Honeypot for Conctact Form 7', 'contact-form-7-honeypot'),
+		__('Honeypot for Contact Form 7', 'contact-form-7-honeypot'),
 		__('Honeypot', 'contact-form-7-honeypot'),
 		'manage_options','honeypot4cf7',
 		'honeypot4cf7_admin_page'

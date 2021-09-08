@@ -34,6 +34,10 @@
 	margin: 0;
 }
 
+#honeypot4cf7-admin-page .honeypot4cf7-admin__introduction {
+	font-size: 18px;
+}
+
 .honeypot4cf7_admin__support-link {
 	float: right;
 	text-transform: uppercase;
@@ -42,7 +46,6 @@
 }
 
 #honeypot4cf7-admin-page .honeypot4cf7-admin__box--coffee {
-	//padding-top: 20%;
 	background-image: url('../images/banner-coffee-dark.jpg');
 	background-repeat: no-repeat;
 	background-size: 100% auto;
@@ -117,18 +120,19 @@
 	font-size: 16px;
 }
 
+
 @media screen and (min-width: 1024px) {
 	#honeypot4cf7-admin-page .honeypot4cf7-admin__primary, #honeypot4cf7-admin-page .honeypot4cf7-admin__secondary {
 		float: left;
 	}
 
 	#honeypot4cf7-admin-page .honeypot4cf7-admin__primary {
-		width: 60%;
+		width: 70%;
 		margin-right: 2%;
 	}
 
 	#honeypot4cf7-admin-page .honeypot4cf7-admin__secondary {
-		width: 38%;
+		width: 28%;
 	}
 }
 

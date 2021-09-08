@@ -133,6 +133,8 @@ function honeypot4cf7_get_config( $context = false ) {
 		'w3c_valid_autocomplete'			=> ( 'reset' == $context || empty( $honeypot4cf7_config['w3c_valid_autocomplete'] ) ) ?  array( 'false' ) : $honeypot4cf7_config['w3c_valid_autocomplete'],
 		'move_inline_css'					=> ( 'reset' == $context || empty( $honeypot4cf7_config['move_inline_css'] ) ) ?  array( 'false' ) : $honeypot4cf7_config['move_inline_css'],
 		'nomessage'							=> ( 'reset' == $context || empty( $honeypot4cf7_config['nomessage'] ) ) ?  array( 'false' ) : $honeypot4cf7_config['nomessage'],
+		'timecheck_enabled'					=> ( 'reset' == $context || empty( $honeypot4cf7_config['timecheck_enabled'] ) ) ?  array( 'false' ) : $honeypot4cf7_config['timecheck_enabled'],
+		'timecheck_value'					=> ( 'reset' == $context || empty( $honeypot4cf7_config['timecheck_value'] ) ) ?  4 : $honeypot4cf7_config['timecheck_value'],
 		'honeypot_count'					=> ( empty( $honeypot4cf7_config['honeypot_count'] ) ) ? 0 : $honeypot4cf7_config['honeypot_count'],
 		'honeypot_install_date'				=> ( empty( $honeypot4cf7_config['honeypot_install_date'] ) ) ? time() : $honeypot4cf7_config['honeypot_install_date'],
 		'honeypot_cf7_req_msg_dismissed'	=> ( 'reset' == $context || empty( $honeypot4cf7_config['honeypot_cf7_req_msg_dismissed'] ) ) ? 0 : $honeypot4cf7_config['honeypot_cf7_req_msg_dismissed'],
@@ -155,7 +157,7 @@ add_action( 'admin_menu', 'honeypot4cf7_admin_menu' );
 function honeypot4cf7_admin_menu() {
 	add_submenu_page(
 		'wpcf7', 
-		__('Honeypot for Conctact Form 7', 'contact-form-7-honeypot'),
+		__('Honeypot for Contact Form 7', 'contact-form-7-honeypot'),
 		__('Honeypot', 'contact-form-7-honeypot'),
 		'manage_options','honeypot4cf7',
 		'honeypot4cf7_admin_page'
@@ -179,6 +181,8 @@ function honeypot4cf7_admin_page() {
 			'w3c_valid_autocomplete'	=> ( isset( $_POST['honeypot4cf7_w3c_valid_autocomplete'] ) ) ? $_POST['honeypot4cf7_w3c_valid_autocomplete'] : array( 'false' ),
 			'move_inline_css'			=> ( isset( $_POST['honeypot4cf7_move_inline_css'] ) ) ? $_POST['honeypot4cf7_move_inline_css'] : array( 'false' ),
 			'nomessage'					=> ( isset( $_POST['honeypot4cf7_nomessage'] ) ) ? $_POST['honeypot4cf7_nomessage'] : array( 'false' ),
+			'timecheck_enabled'			=> ( isset( $_POST['honeypot4cf7_timecheck_enabled'] ) ) ? $_POST['honeypot4cf7_timecheck_enabled'] : array( 'false' ),
+			'timecheck_value'			=> ( isset( $_POST['honeypot4cf7_timecheck_value'] ) ) ? $_POST['honeypot4cf7_timecheck_value'] : 0,
 		);
 	
 		$honeypot4cf7_config = array_replace( $honeypot4cf7_config, $honeypot4cf7_config_update );
@@ -204,6 +208,7 @@ function honeypot4cf7_admin_page() {
 						<?php esc_html_e( 'Get Support', 'contact-form-7-honeypot' ); ?>
 					</a>
 					<h3><span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'Honeypot Settings', 'contact-form-7-honeypot' ); ?></h3>
+					<p class="honeypot4cf7-admin__introduction"><?php esc_html_e( 'Below are global settings for the Honeypot plugin. Many of these settings can be overridden when inserting the Honeypot field shortcode when creating your CF7 contact form.', 'contact-form-7-honeypot' ); ?></p>
 					<table class="form-table">
 						<tbody>
 							<tr valign="top">
@@ -281,6 +286,16 @@ function honeypot4cf7_admin_page() {
 							<tr valign="top">
 								<td class="description" colspan="2"><?php esc_html_e( 'If checked, the accessibility label will not be generated. This is not recommended, but may improve spam blocking. If you\'re unsure, leave this unchecked.', 'contact-form-7-honeypot' ); ?></td>
 							</tr>
+
+							<tr valign="top">
+								<th><label for="honeypot4cf7__timecheck_enabled"><?php esc_html_e( 'Enable Time Check', 'contact-form-7-honeypot' ); ?></label></th>
+								<td>
+									<input type="checkbox" name="honeypot4cf7_timecheck_enabled[]" id="honeypot4cf7__timecheck_enabled" value="true" <?php checked( $honeypot4cf7_config['timecheck_enabled'][0], 'true' ); ?>>&nbsp;&nbsp;<input type="number" class="small-text" name="honeypot4cf7_timecheck_value" id="honeypot4cf7__timecheck_value" value="<?php echo sanitize_text_field( $honeypot4cf7_config['timecheck_value'] ); ?>" step="1" min="1"> <?php esc_html_e('seconds', 'contact-form-7-honeypot'); ?>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td class="description" colspan="2"><?php esc_html_e( 'If enabled, this will perform an additional check for spam bots using the time it takes to submit the form under the idea that bots submit forms faster than people. The value is set to 4 seconds by default, but adjust based on your needs. If you\'re not sure, leave this unchecked.', 'contact-form-7-honeypot' ); ?></td>
+							</tr>
 						</tbody>
 					</table>
 					<p class="submit">
@@ -321,17 +336,10 @@ function honeypot4cf7_admin_page() {
 				</p>
 			</div>
 			<div class="honeypot4cf7-admin__box">
-				<p class="honeypot4cf7__banner-ad-message">
-					<?php 
-					printf(
-						/* translators: %s: Affiliate Link */
-						__( 'We use %s and find it incredibly valuable. If you choose to use them too (even for free), you are helping continued development and support of this plugin. Thank you!', 'contact-form-7-honeypot' ),
-						'<a href="https://shareasale.com/r.cfm?b=1537039&u=2748065&m=97231&urllink=&afftrack=0" target="_blank">Semrush</a>'
-					); 
-					?>
-				</p>
+				<h3><?php esc_html_e( 'Recommended', 'contact-form-7-honeypot' ); ?></h3>
 				<div class="honeypot4cf7__banner-ad honeypot4cf7__banner-ad--2">
-					<a target="_blank" href="https://shareasale.com/r.cfm?b=1550765&amp;u=2748065&amp;m=97231&amp;urllink=&amp;afftrack="><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/semrush-2_300x250.png" border="0" alt="position tracking" /></a>
+					<a target="_blank" href="https://www.amazon.com/dp/0316380520?&tag=nocean-hp-20"><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/art-of-invisibility-cover.jpg" border="0" /></a>
+					<p>Not spam related, but an essential read for anyone that values online privacy and digital security.</p>
 				</div>
 			</div>
 

@@ -319,7 +319,7 @@ function honeypot4cf7_admin_page() {
 						/* translators: 1: spam count 2: install date */
 						__( 'Honeypot has stopped %1$s spam submissions since %2$s', 'contact-form-7-honeypot' ),
 						'<strong>' . $honeypot4cf7_config['honeypot_count'] . '</strong>', 
-						date( get_option( 'date_format' ), $honeypot4cf7_config['honeypot_install_date'] )
+						date_i18n( get_option( 'date_format' ), $honeypot4cf7_config['honeypot_install_date'] )
 					); 
 					?>
 				</p>

@@ -127,12 +127,12 @@
 	}
 
 	#honeypot4cf7-admin-page .honeypot4cf7-admin__primary {
-		width: 70%;
-		margin-right: 2%;
+		width: 80%;
+		margin-right: 20px;
 	}
 
 	#honeypot4cf7-admin-page .honeypot4cf7-admin__secondary {
-		width: 28%;
+		width: calc( 20% - 20px );
 	}
 }
 

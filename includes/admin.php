@@ -1,4 +1,11 @@
 <?php
+/**
+ * Admin functions for Honeypot for Contact Form 7
+ *
+ * @package Honeypot for Contact Form 7
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * 
@@ -87,13 +94,6 @@ function honeypot4cf7_uninstall() {
 *
 *********** */
 function honeypot4cf7_on_activation() {
-    if ( ! current_user_can( 'activate_plugins' ) ) {
-        return;
-    }
-    
-    $plugin = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '';
-    check_admin_referer( "activate-plugin_{$plugin}" );
-
 	// Initialize option values
 	return honeypot4cf7_get_config();
 }
@@ -165,6 +165,53 @@ function honeypot4cf7_admin_menu() {
 }
 
 function honeypot4cf7_admin_page() {
+    $honeypot4cf7_tabs = array(
+        array(
+            'title' => __( 'General', 'contact-form-7-honeypot' ),
+            'slug'  => 'general',
+        ),
+        array(
+            'title' => __( 'Forms', 'contact-form-7-honeypot' ),
+            'slug'  => 'all-forms',
+        ),
+    );
+
+    $current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general';
+	?>
+		
+	<div class="wrap" class="honeypot4cf7-admin" id="honeypot4cf7-admin-page">
+
+        <h1 class="honeypot4cf7-admin__title">
+			<?php esc_html_e( 'Honeypot for Contact Form 7', 'contact-form-7-honeypot' ); ?> <span><?php echo esc_html( 'v' . HONEYPOT4CF7_VERSION ); ?>
+        </h1>
+
+        <h2 class="nav-tab-wrapper">
+            <?php foreach ( $honeypot4cf7_tabs as $tab ) : ?>
+                <?php
+                $tab_url = add_query_arg(
+                    array(
+                        'page' => 'honeypot4cf7',
+                        'tab'  => $tab['slug'],
+                    ),
+                    admin_url( 'admin.php' )
+                );
+                $active = ( $current_tab === $tab['slug'] ) ? ' nav-tab-active' : '';
+                ?>
+                <a href="<?php echo esc_attr( $tab_url ); ?>" class="nav-tab <?php echo esc_attr( $active ); ?>"><?php echo esc_html( $tab['title'] ); ?></a>
+            <?php endforeach; ?>
+        </h2>
+
+        <?php do_action( 'honeypot4cf7_tab_' . $current_tab ); ?>
+
+        <?php echo honeypot4cf7_side_content(); ?>
+
+	</div>
+	
+<?php
+}
+
+add_action( 'honeypot4cf7_tab_general', 'honeypot4cf7_general_tab_content' );
+function honeypot4cf7_general_tab_content() {
 	// Reset Values
 	if ( ! empty( $_POST['clear'] ) && check_admin_referer( 'honeypot4cf7-submit', 'honeypot4cf7_nonce' ) && current_user_can( 'manage_options' ) ) {
 		$honeypot4cf7_config = honeypot4cf7_get_config( 'reset' );
@@ -184,7 +231,7 @@ function honeypot4cf7_admin_page() {
 			'timecheck_enabled'			=> ( isset( $_POST['honeypot4cf7_timecheck_enabled'] ) ) ? $_POST['honeypot4cf7_timecheck_enabled'] : array( 'false' ),
 			'timecheck_value'			=> ( isset( $_POST['honeypot4cf7_timecheck_value'] ) ) ? $_POST['honeypot4cf7_timecheck_value'] : 0,
 		);
-	
+
 		$honeypot4cf7_config = array_replace( $honeypot4cf7_config, $honeypot4cf7_config_update );
 
 		update_option( 'honeypot4cf7_config', $honeypot4cf7_config );
@@ -193,178 +240,196 @@ function honeypot4cf7_admin_page() {
 	} else {
 		$honeypot4cf7_config = honeypot4cf7_get_config();
 	}
-	?>
-		
-	<div class="wrap" class="honeypot4cf7-admin" id="honeypot4cf7-admin-page">
-		<h1 class="honeypot4cf7-admin__title">
-			<?php esc_html_e( 'Honeypot for Contact Form 7', 'contact-form-7-honeypot' ); ?> <span><?php echo esc_html( 'v' . HONEYPOT4CF7_VERSION ); ?>
-		</h1>
-		<div class="honeypot4cf7-admin__primary">
-			<div class="honeypot4cf7-admin__box">
-				<form action="" method="post" id="honeypot4cf7_options_form" name="honeypot4cf7_options_form">
-					<?php wp_nonce_field( 'honeypot4cf7-submit', 'honeypot4cf7_nonce' ); ?>
-					<a href="https://wordpress.org/support/plugin/contact-form-7-honeypot/" target="_blank" class="honeypot4cf7_admin__support-link">
-						<span class="dashicons dashicons-editor-help"></span>
-						<?php esc_html_e( 'Get Support', 'contact-form-7-honeypot' ); ?>
-					</a>
-					<h3><span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'Honeypot Settings', 'contact-form-7-honeypot' ); ?></h3>
-					<p class="honeypot4cf7-admin__introduction"><?php esc_html_e( 'Below are global settings for the Honeypot plugin. Many of these settings can be overridden when inserting the Honeypot field shortcode when creating your CF7 contact form.', 'contact-form-7-honeypot' ); ?></p>
-					<table class="form-table">
-						<tbody>
-							<tr valign="top">
-								<th><label for="honeypot4cf7__store-honeypot"><?php esc_html_e( 'Store Honeypot Value', 'contact-form-7-honeypot' ); ?></label></th>
-								<td>
-									<input type="checkbox" name="honeypot4cf7_store" id="honeypot4cf7__store-honeypot" value="1" <?php checked( $honeypot4cf7_config['store_honeypot'], 1 ); ?>>
-								</td>
-							</tr>
-							<tr valign="top">
-								<td class="description" colspan="2">
-									<?php 
-									printf(
-										/* translators: 1: Link to Flamingo plugin page */
-										__( '(Recommended) By default the Honeypot field is not stored with other fields in form-saving plugins like %1$s. However, saving the field can be useful to see what spam bots are leaving behind to help you improve your spam stopping superpowers. If you\'d like to store the value of the field, simply check this box (and install %1$s).', 'contact-form-7-honeypot' ),
-										'<a href="https://wordpress.org/plugins/flamingo/" target="_blank">' . __( 'Flamingo', 'contact-form-7-honeypot' ) . '</a>'
-									); 
-									?>
-								</td>
-							</tr>
+    ?>
+    <div class="honeypot4cf7-admin__primary">
+        <div class="honeypot4cf7-admin__box">
+            <form action="" method="post" id="honeypot4cf7_options_form" name="honeypot4cf7_options_form">
+				<?php wp_nonce_field( 'honeypot4cf7-submit', 'honeypot4cf7_nonce' ); ?>
+                <a href="https://wordpress.org/support/plugin/contact-form-7-honeypot/" target="_blank" class="honeypot4cf7_admin__support-link">
+                    <span class="dashicons dashicons-editor-help"></span>
+					<?php esc_html_e( 'Get Support', 'contact-form-7-honeypot' ); ?>
+                </a>
+                <h3><span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'Honeypot Settings', 'contact-form-7-honeypot' ); ?></h3>
+                <p class="honeypot4cf7-admin__introduction"><?php esc_html_e( 'Below are global settings for the Honeypot plugin. Many of these settings can be overridden when inserting the Honeypot field shortcode when creating your CF7 contact form.', 'contact-form-7-honeypot' ); ?></p>
+                <table class="form-table">
+                    <tbody>
+                    <tr valign="top">
+                        <th><label for="honeypot4cf7__store-honeypot"><?php esc_html_e( 'Store Honeypot Value', 'contact-form-7-honeypot' ); ?></label></th>
+                        <td>
+                            <input type="checkbox" name="honeypot4cf7_store" id="honeypot4cf7__store-honeypot" value="1" <?php checked( $honeypot4cf7_config['store_honeypot'], 1 ); ?>>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td class="description" colspan="2">
+							<?php
+							printf(
+							/* translators: 1: Link to Flamingo plugin page */
+								__( '(Recommended) By default the Honeypot field is not stored with other fields in form-saving plugins like %1$s. However, saving the field can be useful to see what spam bots are leaving behind to help you improve your spam stopping superpowers. If you\'d like to store the value of the field, simply check this box (and install %1$s).', 'contact-form-7-honeypot' ),
+								'<a href="https://wordpress.org/plugins/flamingo/" target="_blank">' . __( 'Flamingo', 'contact-form-7-honeypot' ) . '</a>'
+							);
+							?>
+                        </td>
+                    </tr>
 
-							<tr valign="top">
-								<th><label for="honeypot4cf7__placeholder"><?php esc_html_e( 'Global Placeholder', 'contact-form-7-honeypot' ); ?></label></th>
-								<td>
-									<input type="text" class="regular-text" name="honeypot4cf7_placeholder" id="honeypot4cf7__placeholder" value="<?php echo sanitize_text_field( $honeypot4cf7_config['placeholder'] ); ?>">
-								</td>
-							</tr>
-							<tr valign="top">
-								<td class="description" colspan="2"><?php esc_html_e( 'If using placeholders on other fields, this can help honeypot mimic a "real" field. This can be overridden in the contact form. If you\'re unsure, leave blank.', 'contact-form-7-honeypot' ); ?></td>
-							</tr>
+                    <tr valign="top">
+                        <th><label for="honeypot4cf7__placeholder"><?php esc_html_e( 'Global Placeholder', 'contact-form-7-honeypot' ); ?></label></th>
+                        <td>
+                            <input type="text" class="regular-text" name="honeypot4cf7_placeholder" id="honeypot4cf7__placeholder" value="<?php echo sanitize_text_field( $honeypot4cf7_config['placeholder'] ); ?>">
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td class="description" colspan="2"><?php esc_html_e( 'If using placeholders on other fields, this can help honeypot mimic a "real" field. This can be overridden in the contact form. If you\'re unsure, leave blank.', 'contact-form-7-honeypot' ); ?></td>
+                    </tr>
 
-							<tr valign="top">
-								<th><label for="honeypot4cf7__accessibility_message"><?php esc_html_e( 'Accessibility Message', 'contact-form-7-honeypot' ); ?></label></th>
-								<td>
-									<input type="text" class="regular-text" name="honeypot4cf7_accessibility_message" id="honeypot4cf7__accessibility_message" value="<?php echo sanitize_text_field( $honeypot4cf7_config['accessibility_message'] ); ?>">
-								</td>
-							</tr>
-							<tr valign="top">
-								<td class="description" colspan="2">
-									<?php 
-									printf(
-										/* translators: %s: default value */
-										__( 'You can customize the (hidden) accessibility message, or just leave it the default value: %s', 'contact-form-7-honeypot' ),
-										'<em>' . __( 'Please leave this field empty.', 'contact-form-7-honeypot' ) . '</em>'
-									); 
-									?>		
-								</td>
-							</tr>
+                    <tr valign="top">
+                        <th><label for="honeypot4cf7__accessibility_message"><?php esc_html_e( 'Accessibility Message', 'contact-form-7-honeypot' ); ?></label></th>
+                        <td>
+                            <input type="text" class="regular-text" name="honeypot4cf7_accessibility_message" id="honeypot4cf7__accessibility_message" value="<?php echo sanitize_text_field( $honeypot4cf7_config['accessibility_message'] ); ?>">
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td class="description" colspan="2">
+							<?php
+							printf(
+							/* translators: %s: default value */
+								__( 'You can customize the (hidden) accessibility message, or just leave it the default value: %s', 'contact-form-7-honeypot' ),
+								'<em>' . __( 'Please leave this field empty.', 'contact-form-7-honeypot' ) . '</em>'
+							);
+							?>
+                        </td>
+                    </tr>
 
-							<tr valign="top">
-								<th><label for="honeypot4cf7__w3c-valid-autocomplete"><?php esc_html_e( 'Use Standard Autocomplete Value', 'contact-form-7-honeypot' ); ?></label></th>
-								<td>
-									<input type="checkbox" name="honeypot4cf7_w3c_valid_autocomplete[]" id="honeypot4cf7__w3c-valid-autocomplete" value="true" <?php checked( $honeypot4cf7_config['w3c_valid_autocomplete'][0], 'true' ); ?>>
-								</td>
-							</tr>
-							<tr valign="top">
-								<td class="description" colspan="2"><?php esc_html_e( 'To assure the honeypot isn\'t auto-completed by a browser, we add an atypical "autocomplete" attribute value. If you have any problems with this, you can switch it to the more standard (but less effective) "off" value. If you\'re unsure, leave this unchecked.', 'contact-form-7-honeypot' ); ?></td>
-							</tr>
+                    <tr valign="top">
+                        <th><label for="honeypot4cf7__w3c-valid-autocomplete"><?php esc_html_e( 'Use Standard Autocomplete Value', 'contact-form-7-honeypot' ); ?></label></th>
+                        <td>
+                            <input type="checkbox" name="honeypot4cf7_w3c_valid_autocomplete[]" id="honeypot4cf7__w3c-valid-autocomplete" value="true" <?php checked( $honeypot4cf7_config['w3c_valid_autocomplete'][0], 'true' ); ?>>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td class="description" colspan="2"><?php esc_html_e( 'To assure the honeypot isn\'t auto-completed by a browser, we add an atypical "autocomplete" attribute value. If you have any problems with this, you can switch it to the more standard (but less effective) "off" value. If you\'re unsure, leave this unchecked.', 'contact-form-7-honeypot' ); ?></td>
+                    </tr>
 
-							<tr valign="top">
-								<th><label for="honeypot4cf7__move_inline_css"><?php esc_html_e( 'Move Inline CSS', 'contact-form-7-honeypot' ); ?></label></th>
-								<td>
-									<input type="checkbox" name="honeypot4cf7_move_inline_css[]" id="honeypot4cf7__move_inline_css" value="true" <?php checked( $honeypot4cf7_config['move_inline_css'][0], 'true' ); ?>>
-								</td>
-							</tr>
-							<tr valign="top">
-								<td class="description" colspan="2"><?php esc_html_e( 'By default Honeypot uses inline CSS on the honeypot field to hide it. Checking this box moves that CSS to the footer of the page. It may help confuse bots.', 'contact-form-7-honeypot' ); ?></td>
-							</tr>
+                    <tr valign="top">
+                        <th><label for="honeypot4cf7__move_inline_css"><?php esc_html_e( 'Move Inline CSS', 'contact-form-7-honeypot' ); ?></label></th>
+                        <td>
+                            <input type="checkbox" name="honeypot4cf7_move_inline_css[]" id="honeypot4cf7__move_inline_css" value="true" <?php checked( $honeypot4cf7_config['move_inline_css'][0], 'true' ); ?>>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td class="description" colspan="2"><?php esc_html_e( 'By default Honeypot uses inline CSS on the honeypot field to hide it. Checking this box moves that CSS to the footer of the page. It may help confuse bots.', 'contact-form-7-honeypot' ); ?></td>
+                    </tr>
 
-							<tr valign="top">
-								<th><label for="honeypot4cf7__nomessage"><?php esc_html_e( 'Disable Accessibility Label', 'contact-form-7-honeypot' ); ?></label></th>
-								<td>
-									<input type="checkbox" name="honeypot4cf7_nomessage[]" id="honeypot4cf7__nomessage" value="true" <?php checked( $honeypot4cf7_config['nomessage'][0], 'true' ); ?>>
-								</td>
-							</tr>
-							<tr valign="top">
-								<td class="description" colspan="2"><?php esc_html_e( 'If checked, the accessibility label will not be generated. This is not recommended, but may improve spam blocking. If you\'re unsure, leave this unchecked.', 'contact-form-7-honeypot' ); ?></td>
-							</tr>
+                    <tr valign="top">
+                        <th><label for="honeypot4cf7__nomessage"><?php esc_html_e( 'Disable Accessibility Label', 'contact-form-7-honeypot' ); ?></label></th>
+                        <td>
+                            <input type="checkbox" name="honeypot4cf7_nomessage[]" id="honeypot4cf7__nomessage" value="true" <?php checked( $honeypot4cf7_config['nomessage'][0], 'true' ); ?>>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td class="description" colspan="2"><?php esc_html_e( 'If checked, the accessibility label will not be generated. This is not recommended, but may improve spam blocking. If you\'re unsure, leave this unchecked.', 'contact-form-7-honeypot' ); ?></td>
+                    </tr>
 
-							<tr valign="top">
-								<th><label for="honeypot4cf7__timecheck_enabled"><?php esc_html_e( 'Enable Time Check', 'contact-form-7-honeypot' ); ?></label></th>
-								<td>
-									<input type="checkbox" name="honeypot4cf7_timecheck_enabled[]" id="honeypot4cf7__timecheck_enabled" value="true" <?php checked( $honeypot4cf7_config['timecheck_enabled'][0], 'true' ); ?>>&nbsp;&nbsp;<input type="number" class="small-text" name="honeypot4cf7_timecheck_value" id="honeypot4cf7__timecheck_value" value="<?php echo sanitize_text_field( $honeypot4cf7_config['timecheck_value'] ); ?>" step="1" min="1"> <?php esc_html_e('seconds', 'contact-form-7-honeypot'); ?>
-								</td>
-							</tr>
-							<tr valign="top">
-								<td class="description" colspan="2"><?php esc_html_e( 'If enabled, this will perform an additional check for spam bots using the time it takes to submit the form under the idea that bots submit forms faster than people. The value is set to 4 seconds by default, but adjust based on your needs. If you\'re not sure, leave this unchecked.', 'contact-form-7-honeypot' ); ?></td>
-							</tr>
-						</tbody>
-					</table>
-					<p class="submit">
-						<input name="save" id="save" class="button button-primary" value="<?php esc_attr_e( 'Save', 'contact-form-7-honeypot' ); ?>" type="submit" />
-						<input name="clear" id="reset" class="button" value="<?php esc_attr_e( 'Reset to Defaults', 'contact-form-7-honeypot' ); ?>" type="submit" />
-						
-					</p>
-				</form>
-			</div>
-			<div class="honeypot4cf7__banner-ad honeypot4cf7__banner-ad--1a">
-				<a target="_blank" href="https://shareasale.com/r.cfm?b=1713710&amp;u=2748065&amp;m=97231&amp;urllink=&amp;afftrack="><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/semrush-1_720x90.gif" border="0" alt="Tools for Any SEO Challenge" /></a>
-			</div>
-			<div class="honeypot4cf7__banner-ad honeypot4cf7__banner-ad--1b">
-				<a target="_blank" href="https://shareasale.com/r.cfm?b=1714372&amp;u=2748065&amp;m=97231&amp;urllink=&amp;afftrack="><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/semrush-1_580x400.gif" border="0" /></a>
-			</div>
-			<div class="honeypot4cf7-admin__box honeypot4cf7-admin__box--count-message">
-				<p>
-					<span class="dashicons dashicons-chart-area"></span> 
-					<?php 
-					printf(
-						/* translators: 1: spam count 2: install date */
-						__( 'Honeypot has stopped %1$s spam submissions since %2$s', 'contact-form-7-honeypot' ),
-						'<strong>' . $honeypot4cf7_config['honeypot_count'] . '</strong>', 
-						date( get_option( 'date_format' ), $honeypot4cf7_config['honeypot_install_date'] )
-					); 
-					?>
-				</p>
-			</div>
-		</div>
+                    <tr valign="top">
+                        <th><label for="honeypot4cf7__timecheck_enabled"><?php esc_html_e( 'Enable Time Check', 'contact-form-7-honeypot' ); ?></label></th>
+                        <td>
+                            <input type="checkbox" name="honeypot4cf7_timecheck_enabled[]" id="honeypot4cf7__timecheck_enabled" value="true" <?php checked( $honeypot4cf7_config['timecheck_enabled'][0], 'true' ); ?>>&nbsp;&nbsp;<input type="number" class="small-text" name="honeypot4cf7_timecheck_value" id="honeypot4cf7__timecheck_value" value="<?php echo sanitize_text_field( $honeypot4cf7_config['timecheck_value'] ); ?>" step="1" min="1"> <?php esc_html_e('seconds', 'contact-form-7-honeypot'); ?>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td class="description" colspan="2"><?php esc_html_e( 'If enabled, this will perform an additional check for spam bots using the time it takes to submit the form under the idea that bots submit forms faster than people. The value is set to 4 seconds by default, but adjust based on your needs. If you\'re not sure, leave this unchecked.', 'contact-form-7-honeypot' ); ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="submit">
+                    <input name="save" id="save" class="button button-primary" value="<?php esc_attr_e( 'Save', 'contact-form-7-honeypot' ); ?>" type="submit" />
+                    <input name="clear" id="reset" class="button" value="<?php esc_attr_e( 'Reset to Defaults', 'contact-form-7-honeypot' ); ?>" type="submit" />
 
-		<div class="honeypot4cf7-admin__secondary">
-			<div class="honeypot4cf7-admin__box honeypot4cf7-admin__box--coffee">
-				<p class="honeypot4cf7-admin__coffee-message">
-					<?php esc_html_e( 'Do you like Honeypot for CF7? Consider showing your support:', 'contact-form-7-honeypot' ); ?><br>
-					<a href="http://www.nocean.ca/buy-us-a-coffee/" target="_blank" class="button button-primary"><strong>
-						<span class="dashicons dashicons-coffee"></span> <?php esc_html_e( 'Buy Us a Coffee', 'contact-form-7-honeypot' ); ?>
-					</strong></a>
-				</p>
-			</div>
-			<div class="honeypot4cf7-admin__box">
-				<h3><?php esc_html_e( 'Recommended', 'contact-form-7-honeypot' ); ?></h3>
-				<div class="honeypot4cf7__banner-ad honeypot4cf7__banner-ad--2">
-					<a target="_blank" href="https://www.amazon.com/dp/0316380520?&tag=nocean-hp-20"><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/art-of-invisibility-cover.jpg" border="0" /></a>
-					<p>Not spam related, but an essential read for anyone that values online privacy and digital security.</p>
-				</div>
-			</div>
+                </p>
+            </form>
+        </div>
+        <div class="honeypot4cf7__banner-ad honeypot4cf7__banner-ad--1a">
+            <a target="_blank" href="https://shareasale.com/r.cfm?b=1713710&amp;u=2748065&amp;m=97231&amp;urllink=&amp;afftrack="><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/semrush-1_720x90.gif" border="0" alt="Tools for Any SEO Challenge" /></a>
+        </div>
+        <div class="honeypot4cf7__banner-ad honeypot4cf7__banner-ad--1b">
+            <a target="_blank" href="https://shareasale.com/r.cfm?b=1714372&amp;u=2748065&amp;m=97231&amp;urllink=&amp;afftrack="><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/semrush-1_580x400.gif" border="0" /></a>
+        </div>
+        <div class="honeypot4cf7-admin__box honeypot4cf7-admin__box--count-message">
+            <p>
+                <span class="dashicons dashicons-chart-area"></span>
 
-			<div class="honeypot4cf7-admin__box honeypot4cf7-admin__rate-us">
-				<div class="honeypot4cf7-admin__stars">
-					<a target="_blank" href="https://wordpress.org/support/plugin/contact-form-7-honeypot/reviews/?filter=5#new-post">
-						<span class="dashicons dashicons-star-filled"></span>
-						<span class="dashicons dashicons-star-filled"></span>
-						<span class="dashicons dashicons-star-filled"></span>
-						<span class="dashicons dashicons-star-filled"></span>
-						<span class="dashicons dashicons-star-filled"></span>
-					</a>
-				</div>
-				<?php 
+				<?php
+				$hpcf7_date_format = date( get_option( 'date_format' ), $honeypot4cf7_config['honeypot_install_date'] );
+				if ( function_exists( 'wp_date' ) ) {
+					$hpcf7_date_format = wp_date( get_option( 'date_format' ), $honeypot4cf7_config['honeypot_install_date'] );
+				} elseif ( function_exists( 'date_i18n' ) ) {
+					$hpcf7_date_format = date_i18n( get_option( 'date_format' ), $honeypot4cf7_config['honeypot_install_date'] );
+				} elseif ( function_exists( 'gmdate' ) ){
+					$hpcf7_date_format = gmdate( get_option( 'date_format' ), $honeypot4cf7_config['honeypot_install_date'] );
+				}
+				?>
+				<?php
 				printf(
-					/* translators: %s: Plugin's reviews page link */
-					__( 'Please rate us on %s. Thanks!!', 'contact-form-7-honeypot' ),
-					'<a target="_blank" href="https://wordpress.org/support/plugin/contact-form-7-honeypot/reviews/?filter=5#new-post">wordpress.org</a>'
+				/* translators: 1: spam count 2: install date */
+					__( 'Honeypot has stopped %1$s spam submissions since %2$s', 'contact-form-7-honeypot' ),
+					'<strong>' . $honeypot4cf7_config['honeypot_count'] . '</strong>',
+					$hpcf7_date_format
 				);
 				?>
-			</div>
-		</div>
-	</div>
-	
-<?php
+            </p>
+        </div>
+    </div>
+    <?php
+}
+
+add_action( 'honeypot4cf7_tab_all-forms', 'honeypot4cf7_all_forms_tab_content' );
+
+function honeypot4cf7_all_forms_tab_content() {
+    require_once HONEYPOT4CF7_PLUGIN_DIR . '/includes/class-honeypot4cf7-data-table.php';
+    ?>
+    <div class="honeypot4cf7-admin__primary">
+        <div class="honeypot4cf7-admin__box">
+            <?php
+                $honeypot4cf7_forms = new Honeypot4cf7_Data_Table();
+                $honeypot4cf7_forms->prepare_items();
+                $honeypot4cf7_forms->display();
+            ?>
+        </div>
+    </div>
+    <?php
+}
+
+
+function honeypot4cf7_side_content() {
+    ob_start();
+    ?>
+    <div class="honeypot4cf7-admin__secondary">
+        <div class="">
+            <div class="honeypot4cf7__banner-ad honeypot4cf7__banner-ad--2">
+                <a target="_blank" href="https://wp.org/plugins/post-smtp"><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/post-smtp-branding.png" border="0" /></a>
+            </div>
+        </div>
+
+        <div class="honeypot4cf7-admin__box honeypot4cf7-admin__rate-us">
+            <div class="honeypot4cf7-admin__stars">
+                <a target="_blank" href="https://wordpress.org/support/plugin/contact-form-7-honeypot/reviews/?filter=5#new-post">
+                    <span class="dashicons dashicons-star-filled"></span>
+                    <span class="dashicons dashicons-star-filled"></span>
+                    <span class="dashicons dashicons-star-filled"></span>
+                    <span class="dashicons dashicons-star-filled"></span>
+                    <span class="dashicons dashicons-star-filled"></span>
+                </a>
+            </div>
+			<?php
+			printf(
+			/* translators: %s: Plugin's reviews page link */
+				__( 'Please rate us on %s. Thanks!!', 'contact-form-7-honeypot' ),
+				'<a target="_blank" href="https://wordpress.org/support/plugin/contact-form-7-honeypot/reviews/?filter=5#new-post">wordpress.org</a>'
+			);
+			?>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
 }
 
 /* ***********
@@ -381,4 +446,35 @@ function honeypot4cf7_admin_enqueues( $hook ) {
 add_action( 'admin_enqueue_scripts', 'honeypot4cf7_admin_enqueues' );
 
 
+if ( ! function_exists( 'str_contains' ) ) {
+	/**
+     * Check if a string contains another string.
+     * Backward compatibility for PHP < 8.0
+     *
+	 * @param string $haystack
+	 * @param string $needle
+	 *
+	 * @return bool
+	 */
+    function str_contains( $haystack, $needle ) {
+        return '' !== $needle && false !== strpos( $haystack, $needle );
+    }
+}
 
+add_filter( 'wpcf7_config_validator_available_error_codes', 'honeypot4cf7_remove_cf7_error_messages', 10, 2 );
+
+function honeypot4cf7_remove_cf7_error_messages( $error_codes, $contact_form ) {
+
+    $error_codes_to_disable = array( 'unsafe_email_without_protection' );
+
+    $contact_form = $contact_form->get_properties();
+    if ( isset( $contact_form['form'] ) ) {
+	    $regx = '/\[honeypot [a-zA-Z]/i';
+	    preg_match_all( $regx, $contact_form['form'], $matches );
+        if ( ! empty( $matches[0] ) ) {
+            $error_codes = array_diff( $error_codes, $error_codes_to_disable );
+        }
+    }
+
+    return $error_codes;
+}

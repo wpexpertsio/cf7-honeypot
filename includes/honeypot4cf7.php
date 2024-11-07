@@ -1,4 +1,11 @@
 <?php
+/**
+ * Frontend Honeypot for Contact Form 7
+ *
+ * @package   Contact_Form_7_Honeypot
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  *

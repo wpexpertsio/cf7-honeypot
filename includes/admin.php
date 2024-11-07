@@ -460,3 +460,21 @@ if ( ! function_exists( 'str_contains' ) ) {
         return '' !== $needle && false !== strpos( $haystack, $needle );
     }
 }
+
+add_filter( 'wpcf7_config_validator_available_error_codes', 'honeypot4cf7_remove_cf7_error_messages', 10, 2 );
+
+function honeypot4cf7_remove_cf7_error_messages( $error_codes, $contact_form ) {
+
+    $error_codes_to_disable = array( 'unsafe_email_without_protection' );
+
+    $contact_form = $contact_form->get_properties();
+    if ( isset( $contact_form['form'] ) ) {
+	    $regx = '/\[honeypot [a-zA-Z]/i';
+	    preg_match_all( $regx, $contact_form['form'], $matches );
+        if ( ! empty( $matches[0] ) ) {
+            $error_codes = array_diff( $error_codes, $error_codes_to_disable );
+        }
+    }
+
+    return $error_codes;
+}

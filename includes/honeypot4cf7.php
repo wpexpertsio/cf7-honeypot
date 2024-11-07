@@ -227,7 +227,7 @@ add_action( 'wpcf7_admin_init', 'honeypot4cf7_generate_form_tag', 10, 0 );
 
 function honeypot4cf7_generate_form_tag() {
 	$tag_generator = WPCF7_TagGenerator::get_instance();
-	$tag_generator->add( 'honeypot', __( 'Honeypot', 'contact-form-7-honeypot' ), 'honeypot4cf7_form_tag_generator' );
+	$tag_generator->add( 'honeypot', __( 'Honeypot', 'contact-form-7-honeypot' ), 'honeypot4cf7_form_tag_generator', array( 'version' => '2' ) );
 }
 
 function honeypot4cf7_form_tag_generator( $contact_form, $args = '' ) {

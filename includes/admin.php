@@ -405,7 +405,7 @@ function honeypot4cf7_side_content() {
     <div class="honeypot4cf7-admin__secondary">
         <div class="">
             <div class="honeypot4cf7__banner-ad honeypot4cf7__banner-ad--2">
-                <a target="_blank" href="https://wp.org/plugins/post-smtp"><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/post-smtp-branding.png" border="0" /></a>
+                <a target="_blank" href="https://postmansmtp.com/pricing/?utm_source=CF7_Perks&utm_medium=Banner&utm_id=CF7_Perks_Baner&utm_content=side_banner"><img src="<?php echo HONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/post-smtp-branding.png" border="0" /></a>
             </div>
         </div>
 

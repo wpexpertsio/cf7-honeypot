@@ -5,7 +5,7 @@
  * Description: Add honeypot anti-spam functionality to the popular Contact Form 7 plugin.
  * Author: WPExperts
  * Author URI: https://wpexperts.io/
- * Version: 2.1.6
+ * Version: 2.1.7
  * Text Domain: contact-form-7-honeypot
  * Domain Path: /languages/
  * Requires Plugins: contact-form-7
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'HONEYPOT4CF7_VERSION', '2.1.6' );
+define( 'HONEYPOT4CF7_VERSION', '2.1.7' );
 define( 'HONEYPOT4CF7_PLUGIN', __FILE__ );
 define( 'HONEYPOT4CF7_PLUGIN_BASENAME', plugin_basename( HONEYPOT4CF7_PLUGIN ) );
 define( 'HONEYPOT4CF7_PLUGIN_NAME', trim( dirname( HONEYPOT4CF7_PLUGIN_BASENAME ), '/' ) );
